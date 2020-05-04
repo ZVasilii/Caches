@@ -10,6 +10,7 @@ struct cell {
     void* pointer;
 };
 
+void close_hole(struct cell* c);
 
 struct cell* make_cell(long long int name) {
     struct cell* c;
@@ -26,20 +27,14 @@ struct cell* make_cell(long long int name) {
 
 void destroy_cell(struct cell* c) {
     assert(c != NULL);
+    close_hole(c);
     free(c);
 }
 
 struct cell* place_cell_before(struct cell* c, struct cell* place) {
     assert(c != NULL);
     assert(place != NULL);
-
-    if(c->prev != NULL) {
-        c->prev->next = c->next;
-    }
-    if(c->next != NULL) {
-        c->next->prev = c->prev;
-    }
-
+    close_hole(c);
     c->prev = place->prev;
     if(c->prev != NULL) {
         c->prev->next = c;
@@ -52,14 +47,7 @@ struct cell* place_cell_before(struct cell* c, struct cell* place) {
 struct cell* place_cell_after(struct cell* c, struct cell* place) {
     assert(c != NULL);
     assert(place != NULL);
-
-    if(c->prev != NULL) {
-        c->prev->next = c->next;
-    }
-    if(c->next != NULL) {
-        c->next->prev = c->prev;
-    }
-
+    close_hole(c);
     c->next = place->next;
     if(c->next != NULL) {
         c->next->prev = c;
@@ -69,14 +57,120 @@ struct cell* place_cell_after(struct cell* c, struct cell* place) {
     return c;
 }
 
-int cell_name(struct cell* c) {
+long long int cell_name(struct cell* c) {
+    assert(c != NULL);
     return c->data;
 }
 
 struct cell* next_cell(struct cell* c) {
+    assert(c != NULL);
     return c->next;
 }
 
 struct cell* prev_cell(struct cell* c) {
+    assert(c != NULL);
     return c->prev;
+}
+
+void destroy_list(struct cell* c) {
+    struct cell* s;
+    assert(c != NULL);
+    while(1) {
+        if(c->prev == c) {
+            destroy_cell(c);
+            break;
+        }
+        if(c->prev != NULL) {
+            s = c->prev;
+            destroy_cell(c);
+            c = s;
+            continue;
+        }
+        if(c->next != NULL) {
+            s = c->next;
+            destroy_cell(c);
+            c = s;
+            continue;
+        }
+        destroy_cell(c);
+        break;
+    }
+}
+
+struct cell* set_pointer(struct cell* c, void* pointer) {
+    assert(c != NULL);
+    c->pointer = pointer;
+    return c;
+}
+
+void* cell_pointer(struct cell* c) {
+    assert(c != NULL);
+    return c->pointer;
+}
+
+void close_hole(struct cell* c) {
+    if(c->prev != NULL) {
+        c->prev->next = c->next;
+    }
+    if(c->next != NULL) {
+        c->next->prev = c->prev;
+    }
+}
+
+struct cell* make_cell_p(long long int name, void* pointer) {
+    struct cell* c;
+    c = make_cell(name);
+    if(c != NULL) {
+        c->pointer = pointer;
+    }
+    return c;
+}
+
+struct cell* find_cell(struct cell* c, long long int name) {
+    struct cell* s;
+    assert(c != NULL);
+    if(c->data == name) {
+        return c;
+    }
+    s = c->prev;
+    while(s != NULL) {
+        if(s->data == name) {
+            return s;
+        }
+        if(s == c) {
+            return NULL;
+        }
+        s = s->prev;
+    }
+    s = c->next;
+    while(s != NULL) {
+        if(s->data == name) {
+            return s;
+        }
+        if(s == c) {
+            return NULL;
+        }
+        s = s->next;
+    }
+    return NULL;
+}
+
+unsigned long long list_len(struct cell* c) {
+    unsigned long long len = 1;
+    struct cell* s;
+    assert(c != NULL);
+    s = c->prev;
+    while (s != NULL) {
+        if(s == c) {
+            return len;
+        }
+        len++;
+        s = s->prev;
+    }
+    s = c->next;
+    while (s != NULL) {
+        len++;
+        s = s->next;
+    }
+    return len;
 }

@@ -5,13 +5,13 @@
 #include <assert.h>
 
 
-#include "test_slow.h"
+#include "pages.h"
 
 //Creating memory
-struct page* create_fill_mem (size_t size)
+struct page_t* create_fill_mem (size_t size)
 {
 	srand(time(NULL));
-	struct page* mem = (struct page*) calloc (size, sizeof(struct page));
+	struct page_t* mem = (struct page_t*) calloc (size, sizeof(struct page_t));
 	assert(mem && "CreateFill");
 	for(int i = 0; i < size; i++)
 	{
@@ -23,7 +23,7 @@ struct page* create_fill_mem (size_t size)
 }
 
 //Printing memory
-void print_mem(struct page* mem)
+void print_mem(struct page_t* mem)
 {
 	assert(mem && "Print");
 	for(int i = 0; i < MEM_SIZE; i++)
@@ -34,49 +34,57 @@ void print_mem(struct page* mem)
 }
 
 //Printing requested page
-void print_page(struct page* target)
+void print_page(struct page_t* target)
 {
-		printf("\n");
-		printf("Index: %d\n", target -> index);
-		printf("Data: ");
-		for (int j = 0; j < DATA_SIZE; j++)
-		{
-			printf("%c", target -> data[j]);
-		}
-		printf("\n");
+	assert(target && "Print");
+	printf("\n");
+	printf("Index: %d\n", target -> index);
+	printf("Data: ");
+	for (int j = 0; j < DATA_SIZE; j++)
+	{
+		printf("%c", target -> data[j]);
+	}
+	printf("\n");
 }
 
 //Getting page without caching
-void slow_get_page (struct page* target, struct page* mem, int n)
+void slow_get_page (struct page_t* target, struct page_t* mem, int n)
 {
+	assert(mem && "Get_P");
+	assert(target && "Get_P");
 	target->index = mem[n].index;
 	memcpy(target->data, mem[n].data, DATA_SIZE * sizeof(char));
 
 }
 
 //Testing function that requests page with random index
-void request(int size, struct page* mem)
+void request(int size, struct page_t* mem)
 {
+	assert(mem && "Request");
 	srand(time(NULL));
-	struct page* target = (struct page*) calloc (1, sizeof(struct page));
+	struct page_t* target = (struct page_t*) calloc (1, sizeof(struct page_t));
 	int req_n = 0;
 	for (int i = 0; i < size; i++)
 	{
 		req_n = rand() % MEM_SIZE;
 		slow_get_page(target, mem, req_n); 
+
+		#ifdef PRINT
 		printf("%d page requested\n", req_n);
 		print_page(target);
+		#endif
+
 	}
 	free(target);
 }
 
+/*
 int main()
 {
-	struct page*  mem = create_fill_mem(MEM_SIZE);
+	struct page_t*  mem = create_fill_mem(MEM_SIZE);
 	assert(mem != NULL);
 	request(REQ_SIZE, mem);
 	free(mem);
 	return 0;
-
-
 }
+*/

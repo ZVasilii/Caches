@@ -1,13 +1,17 @@
-#include "dl_list.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+
+#include "pages.h"
+#include "dl_list.h"
+
+
 
 struct cell {
     struct cell* prev;
     struct cell* next;
     long long int data;
-    void* pointer;
+    struct page_t* page_ptr;
 };
 
 void close_hole(struct cell* c);
@@ -15,19 +19,21 @@ void close_hole(struct cell* c);
 struct cell* make_cell(long long int name) {
     struct cell* c;
     c = (struct cell*) calloc(1, sizeof (struct cell));
-    if(c == NULL) {
+    if(c == NULL) 
+    {
         return NULL;
     }
     c->prev = NULL;
     c->next = NULL;
     c->data = name;
-    c->pointer = NULL;
+    c->page_ptr = (struct page_t*) calloc (1, sizeof(struct page_t));
     return c;
 }
 
 void destroy_cell(struct cell* c) {
     assert(c != NULL);
     close_hole(c);
+    free(c->page_ptr);
     free(c);
 }
 
@@ -36,7 +42,8 @@ struct cell* place_cell_before(struct cell* c, struct cell* place) {
     assert(place != NULL);
     close_hole(c);
     c->prev = place->prev;
-    if(c->prev != NULL) {
+    if(c->prev != NULL)
+    {
         c->prev->next = c;
     }
     c->next = place;
@@ -97,15 +104,15 @@ void destroy_list(struct cell* c) {
     }
 }
 
-struct cell* set_pointer(struct cell* c, void* pointer) {
+struct cell* set_page(struct cell* c, struct page_t* new_page) {
     assert(c != NULL);
-    c->pointer = pointer;
+    c->page_ptr = new_page;
     return c;
 }
 
-void* cell_pointer(struct cell* c) {
+void* cell_page(struct cell* c) {
     assert(c != NULL);
-    return c->pointer;
+    return c->page_ptr;
 }
 
 void close_hole(struct cell* c) {
@@ -117,11 +124,11 @@ void close_hole(struct cell* c) {
     }
 }
 
-struct cell* make_cell_p(long long int name, void* pointer) {
+struct cell* make_cell_p(long long int name, struct page_t* new_page) {
     struct cell* c;
     c = make_cell(name);
     if(c != NULL) {
-        c->pointer = pointer;
+        c->page_ptr = new_page;
     }
     return c;
 }

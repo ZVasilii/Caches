@@ -1,6 +1,7 @@
 #pragma once
 
 struct cell;
+struct page_t;
 
 struct cell* make_cell(long long int name);
 void destroy_cell(struct cell* c);
@@ -15,3 +16,7 @@ void* cell_page(struct cell* c);
 struct cell* make_cell_p(long long int name, struct page_t* new_page);
 struct cell* find_cell(struct cell* c, long long int name);
 unsigned long long list_len(struct cell* c);
+int is_first(struct cell* c);
+int is_last(struct cell* c);
+
+void list_test();

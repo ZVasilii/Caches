@@ -2,7 +2,7 @@
 
 Внутренние файлы списка: dl_list.c
 
-Заголовочный файл: dl_list.h
+Заголовочный файл: dl_list.h, pages.h
 
 
 
@@ -13,7 +13,7 @@ struct cell {
     struct cell* prev;
     struct cell* next;
     long long int data;
-    void* pointer;
+    struct page_t* page_ptr;
 };
 
 
@@ -23,7 +23,7 @@ struct cell {
 Создание одной ячейки:
 struct cell* make_cell(long long int name)
 Принимает "имя" ячейки, возвращает указатель на нее. Не забудьте почистить память после использования.
-struct cell* make_cell_p(long long int name, void* pointer)
+struct cell* make_cell_p(long long int name, struct page_t* page_ptr)
 Создает ячейку с заданным именем и указателем.
 
 Уничтожение ячейки: 
@@ -52,10 +52,10 @@ struct cell* prev_cell(struct cell* c)
 Получает указатель на текущую ячейку, возвращает указатель на следующую/предыдущую.
 
 Работа с указателем ячейки:
-struct cell* set_pointer(struct cell* c, void* pointer)
+struct cell* set_page(struct cell* c, struct page_t* page_ptr)
 Записывает в ячейку значение введенного указателя, старый при наличии безвозвратно затирается.
 Возращает указатель на ячейку.
-void* cell_pointer(struct cell* c)
+struct page_t* cell_page(struct cell* c)
 Возвращает записанный в ячейку указатель. При отстутствии возращает NULL.
 
 Поиск ячейки:

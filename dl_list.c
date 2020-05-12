@@ -19,8 +19,7 @@ void close_hole(struct cell* c);
 struct cell* make_cell(long long int name) {
     struct cell* c;
     c = (struct cell*) calloc(1, sizeof (struct cell));
-    if(c == NULL) 
-    {
+    if(c == NULL) {
         return NULL;
     }
     c->prev = NULL;
@@ -180,4 +179,18 @@ unsigned long long list_len(struct cell* c) {
         s = s->next;
     }
     return len;
+}
+
+int is_first(struct cell* c) {
+    if(c->prev == NULL) {
+        return 1;
+    }
+    return 0;
+}
+
+int is_last(struct cell* c) {
+    if(c->next == NULL) {
+        return 1;
+    }
+    return 0;
 }

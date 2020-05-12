@@ -22,6 +22,7 @@ struct cell* make_cell() {
     assert(c != NULL);
     c->prev = NULL;
     c->next = NULL;
+    c->data = 0;
     c->page_ptr = NULL;
     return c;
 }

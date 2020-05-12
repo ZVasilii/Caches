@@ -14,25 +14,21 @@ struct cell {
     struct page_t* page_ptr;
 };
 
-void close_hole(struct cell* c);
+static void close_hole(struct cell* c);
 
-struct cell* make_cell(long long int name) {
+struct cell* make_cell() {
     struct cell* c;
     c = (struct cell*) calloc(1, sizeof (struct cell));
-    if(c == NULL) {
-        return NULL;
-    }
+    assert(c != NULL);
     c->prev = NULL;
     c->next = NULL;
-    c->data = name;
-    c->page_ptr = (struct page_t*) calloc (1, sizeof(struct page_t));
+    c->page_ptr = NULL;
     return c;
 }
 
 void destroy_cell(struct cell* c) {
     assert(c != NULL);
     close_hole(c);
-    free(c->page_ptr);
     free(c);
 }
 
@@ -109,7 +105,7 @@ struct cell* set_page(struct cell* c, struct page_t* new_page) {
     return c;
 }
 
-void* cell_page(struct cell* c) {
+struct page_t* cell_page(struct cell* c) {
     assert(c != NULL);
     return c->page_ptr;
 }
@@ -123,13 +119,40 @@ void close_hole(struct cell* c) {
     }
 }
 
-struct cell* make_cell_p(long long int name, struct page_t* new_page) {
+struct cell* make_cell_n(long long int name) {
     struct cell* c;
-    c = make_cell(name);
-    if(c != NULL) {
-        c->page_ptr = new_page;
-    }
+    c = make_cell();
+    c->data = name;
     return c;
+}
+
+struct cell* make_cell_p(struct page_t* new_page) {
+    struct cell* c;
+    c = make_cell();
+    c->page_ptr = new_page;
+    return c;
+}
+
+struct cell* make_cell_np(long long int name, struct page_t* new_page) {
+    struct cell* c;
+    c = make_cell();
+    c->page_ptr = new_page;
+    c->data = name;
+    return c;
+}
+
+struct cell* make_list(unsigned long long length) {
+    struct cell *start, *cur, *creating;
+    unsigned long long i;
+    assert(length > 0);
+    start = make_cell();
+    cur = start;
+    for(i = 1; i < length; i++) {
+        creating = make_cell();
+        place_cell_after(creating, cur);
+        cur = creating;
+    }
+    return start;
 }
 
 struct cell* find_cell(struct cell* c, long long int name) {
@@ -182,6 +205,7 @@ unsigned long long list_len(struct cell* c) {
 }
 
 int is_first(struct cell* c) {
+    assert(c != NULL);
     if(c->prev == NULL) {
         return 1;
     }
@@ -189,8 +213,14 @@ int is_first(struct cell* c) {
 }
 
 int is_last(struct cell* c) {
+    assert(c != NULL);
     if(c->next == NULL) {
         return 1;
     }
     return 0;
+}
+
+void change_cell_name(struct cell* c, long long int new_name) {
+    assert(c != NULL);
+    c->data = new_name;
 }

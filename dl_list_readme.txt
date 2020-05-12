@@ -21,10 +21,16 @@ struct cell {
 Доступные функции:
 
 Создание одной ячейки:
-struct cell* make_cell(long long int name)
-Принимает "имя" ячейки, возвращает указатель на нее. Не забудьте почистить память после использования.
+struct cell* make_cell()
+Создает ячейку, возвращает указатель на нее. Не забудьте почистить память после использования.
+struct cell* make_cell_n(long long int name)
+Создает ячейку с заданным именем
 struct cell* make_cell_p(long long int name, struct page_t* page_ptr)
+Создает ячейку с заданным указателем.
+struct cell* make_cell_np(long long int name, struct page_t* page_ptr)
 Создает ячейку с заданным именем и указателем.
+struct cell* make_list(unsigned long long length)
+создает пустой список, возвращает указатель на начало. 
 
 Уничтожение ячейки: 
 void destroy_cell(struct cell* c) 
@@ -66,3 +72,7 @@ struct cell* find_cell(struct cell* c, long long int name)
 Нахождение длины списка:
 unsigned long long list_len(struct cell* c)
 Возвращает длину списка по любой его ячейке. Предусмотрена работа с зацикленными списками.
+
+Тестирование работоспособности списка:
+void list_test()
+Сделано при помощи реализации сортировки вставками.

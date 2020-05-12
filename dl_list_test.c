@@ -86,11 +86,11 @@ static struct cell* make_arr_l(int* arr, unsigned long long size) {
     assert(size > 0);
     assert(arr != NULL);
 
-    first = make_cell((long long) arr[0]);
+    first = make_cell_n((long long) arr[0]);
     assert(first != NULL);
     last = first;
     for(i = 1; i < size; i++) {
-        cur = make_cell((long long) arr[i]);
+        cur = make_cell_n((long long) arr[i]);
         place_cell_after(cur, last);
         last = cur;
     }

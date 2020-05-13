@@ -17,6 +17,11 @@ struct cell {
 };
 
 
+—ам список может быть представлен структурой (возможна работа напр€мую) 
+struct list_t {
+    struct cell* head;
+    unsigned long long length;
+};
 
 ƒоступные функции:
 
@@ -30,18 +35,20 @@ struct cell* make_cell_p(long long int name, struct page_t* page_ptr)
 —оздает €чейку с заданным указателем.
 struct cell* make_cell_np(long long int name, struct page_t* page_ptr)
 —оздает €чейку с заданным именем и указателем.
-struct cell* make_list(unsigned long long length)
-создает пустой список, возвращает указатель на начало. 
+struct list_t* make_list(unsigned long long length)
+—оздает список с пустыми €чейками длины length. ѕри length = 0 создает список без €чеек. 
 
 ”ничтожение €чейки: 
 void destroy_cell(struct cell* c) 
 ”ничтожает одну €чейку по введенному указателю, очища€ пам€ть.
 «ат€гивает "дыры", которые могли остатьс€ на ее месте.
-
-”ничтожение списка: 
-void destroy_list(struct cell* c)
+void destroy_all_cells(struct cell* c) 
 ”ничтожает указанную €чейку и все, которые с ней св€заны. 
 ѕредусмотрена работа на зацикленных списках.
+
+”ничтожение списка: 
+void destroy_list(struct list_t* l)
+”ничтожает список и все его €чейки.
 
 ѕеремещение €чейки: 
 struct cell* place_cell_before(struct cell* c, struct cell* place)
@@ -66,8 +73,8 @@ struct page_t* cell_page(struct cell* c)
 ¬озвращает записанный в €чейку указатель. ѕри отстутствии возращает NULL.
 
 ѕоиск €чейки:
-struct cell* find_cell(struct cell* c, long long int name)
-»щет €чейку с заданным именем, возвращает указатель на нее. с - указатель на любую €чейку списка.
+struct cell* find_cell(struct list_t* l, long long int name)
+»щет €чейку с заданным именем, возвращает указатель на нее. l - указатель на список.
 ѕри наличии нескольких €чеек с одинаковым именем возвращает любую.
 
 Ќахождение длины списка:

@@ -75,7 +75,7 @@ struct cell* prev_cell(struct cell* c) {
     return c->prev;
 }
 
-void destroy_list(struct cell* c) {
+void destroy_all_cells(struct cell* c) {
     struct cell* s;
     assert(c != NULL);
     while(1) {
@@ -98,6 +98,14 @@ void destroy_list(struct cell* c) {
         destroy_cell(c);
         break;
     }
+}
+
+void destroy_list(struct list_t* l) {
+    assert(l != NULL);
+    if(l->head != NULL) {
+        destroy_all_cells(l->head);
+    }
+    free(l);
 }
 
 struct cell* set_page(struct cell* c, struct page_t* new_page) {
@@ -142,22 +150,30 @@ struct cell* make_cell_np(long long int name, struct page_t* new_page) {
     return c;
 }
 
-struct cell* make_list(unsigned long long length) {
-    struct cell *start, *cur, *creating;
+struct list_t* make_list(unsigned long long length) {
+    struct list_t* l;
+    struct cell *cur, *creating;
     unsigned long long i;
-    assert(length > 0);
-    start = make_cell();
-    cur = start;
+    l = (struct list_t*) calloc(1, sizeof (struct list_t));
+    l->length = length;
+    if(length == 0) {
+        l->head = NULL;
+        return l;
+    }
+    l->head = make_cell();
+    cur = l->head;
     for(i = 1; i < length; i++) {
         creating = make_cell();
         place_cell_after(creating, cur);
         cur = creating;
     }
-    return start;
+    return l;
 }
 
-struct cell* find_cell(struct cell* c, long long int name) {
-    struct cell* s;
+struct cell* find_cell(struct list_t* l, long long int name) {
+    struct cell *c, *s;
+    assert(l != NULL);
+    c = l->head;
     assert(c != NULL);
     if(c->data == name) {
         return c;
@@ -185,9 +201,9 @@ struct cell* find_cell(struct cell* c, long long int name) {
     return NULL;
 }
 
-unsigned long long list_len(struct cell* c) {
+unsigned long long cell_num(struct cell* c) {
     unsigned long long len = 1;
-    struct cell* s;
+    struct cell *s;
     assert(c != NULL);
     s = c->prev;
     while (s != NULL) {

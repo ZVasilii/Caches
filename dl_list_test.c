@@ -77,7 +77,7 @@ static void ins_sort(int* arr, unsigned long long size, int (*comp) (const void*
     } while(is_last(n) == 0);
 
     rewrite(arr, arr_l, size);
-    destroy_list(arr_l);
+    destroy_all_cells(arr_l);
 }
 
 static struct cell* make_arr_l(int* arr, unsigned long long size) {
@@ -102,7 +102,7 @@ static void rewrite(int* arr, struct cell* arr_l,  unsigned long long size) {
     struct cell* cur;
     assert(arr != NULL);
     assert(arr_l != NULL);
-    assert(size == list_len(arr_l));
+    assert(size == cell_num(arr_l));
     cur = arr_l;
     for(i = 0; i < size; i++) {
         assert(cur != NULL);

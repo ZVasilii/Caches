@@ -1,6 +1,6 @@
 Это инструкция по использованию двусвязного списка.
 
-Внутренние файлы списка: dl_list.c
+Внутренние файлы списка: dl_list.c, dl_cells.c
 
 Заголовочный файл: dl_list.h, pages.h
 
@@ -16,13 +16,6 @@ struct cell {
     struct page_t* page_ptr;
 };
 
-
-Сам список может быть представлен структурой (возможна работа напрямую) 
-struct list_t {
-    struct cell* head;
-    unsigned long long length;
-};
-
 Доступные функции:
 
 Создание одной ячейки:
@@ -35,8 +28,6 @@ struct cell* make_cell_p(long long int name, struct page_t* page_ptr)
 Создает ячейку с заданным указателем.
 struct cell* make_cell_np(long long int name, struct page_t* page_ptr)
 Создает ячейку с заданным именем и указателем.
-struct list_t* make_list(unsigned long long length)
-Создает список с пустыми ячейками длины length. При length = 0 создает список без ячеек. 
 
 Уничтожение ячейки: 
 void destroy_cell(struct cell* c) 
@@ -45,10 +36,6 @@ void destroy_cell(struct cell* c)
 void destroy_all_cells(struct cell* c) 
 Уничтожает указанную ячейку и все, которые с ней связаны. 
 Предусмотрена работа на зацикленных списках.
-
-Уничтожение списка: 
-void destroy_list(struct list_t* l)
-Уничтожает список и все его ячейки.
 
 Перемещение ячейки: 
 struct cell* place_cell_before(struct cell* c, struct cell* place)
@@ -81,6 +68,40 @@ struct cell* find_cell(struct list_t* l, long long int name)
 unsigned long long list_len(struct cell* c)
 Возвращает длину списка по любой его ячейке. Предусмотрена работа с зацикленными списками.
 
+
+Сам список представлен открытой для внешнего использования структурой
+struct list_t {
+    struct cell* head;
+    unsigned long long length;
+    struct cell* end;
+    struct cell* last_found;
+};
+
+Функции для работы со списком:
+
+Создание списка без ячеек
+struct list_t* make_list()
+Возвращает указатель на список. Все указатели NULL, длина 0.
+
+Удаление списка (вместе с ячейками)
+void destroy_list(struct list_t* l)
+
+Поиск элемента списка по названию.
+struct cell* find_list_elem(struct list_t* l, long long int name)
+Найденный элемент возвращается функцией и записывается в last_found.
+
+Вставка элемента в начало списка
+struct cell* insert_to_head(struct list_t* l, struct cell* c)
+
+Перестановка элемента 
+struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next)
+Переставляет last found элемент cur в начало next. 
+Cur и next могут быть как разными, так и одним и тем же списком.
+
+Удаляет последний элемент списка.
+void delete_last_elem(struct list_t* l)
+
 Тестирование работоспособности списка:
 void list_test()
 Сделано при помощи реализации сортировки вставками.
+

@@ -7,12 +7,12 @@
 
 #include "pages.h"
 
-//Creating memory
+//Creating main memory of MEM_SIZE
 struct page_t* create_fill_mem (size_t size)
 {
 	srand(time(NULL));
 	struct page_t* mem = (struct page_t*) calloc (size, sizeof(struct page_t));
-	assert(mem && "CreateFill");
+	assert(mem && "CreateFillMem");
 	for(int i = 0; i < size; i++)
 	{
 		mem[i].index = i;
@@ -20,6 +20,39 @@ struct page_t* create_fill_mem (size_t size)
 			mem[i].data[j] = rand() % 127;
 	}
 	return mem;
+}
+
+//Creating cache_memory of CACHE_SIZE
+struct cache_t* create_fill_cache (size_t size)
+{
+	struct cache_t* cache_mem = (struct cache_t*) calloc (size, sizeof(struct cache_t));
+	assert(cache_mem && "CreateFillCache");
+	return cache_mem;
+}
+
+//Removing main memory
+void remove_mem(struct page_t* mem)
+{
+	free(mem);
+	mem = NULL;
+}
+
+//Removing cache
+void remove_cache(struct cache_t* cache_mem)
+{
+	free(cache_mem);
+	cache_mem = NULL;
+}
+
+//Finding page in memory 
+struct page_t* find_page(int number, struct page_t* mem, size_t size)
+{
+	assert(mem && "Find_P");
+	for(int i = 0; i < size; i++)
+	{
+		if (mem[i].index == number)
+			return mem + i;
+	}
 }
 
 //Printing memory
@@ -48,12 +81,12 @@ void print_page(struct page_t* target)
 }
 
 //Getting page without caching
-void slow_get_page (struct page_t* target, struct page_t* mem, int n)
+void slow_get_page (struct page_t* target, struct page_t* mem, int number)
 {
 	assert(mem && "Get_P");
 	assert(target && "Get_P");
-	target->index = mem[n].index;
-	memcpy(target->data, mem[n].data, DATA_SIZE * sizeof(char));
+	struct page_t* page = find_page(number, mem, MEM_SIZE);
+	memcpy(target, page,  sizeof(struct page_t));
 
 }
 
@@ -82,6 +115,7 @@ void request(int size, struct page_t* mem)
 int main()
 {
 	struct page_t*  mem = create_fill_mem(MEM_SIZE);
+	struct cache_t* cache = create_fill_cache(CACHE_SIZE);
 	assert(mem != NULL);
 	request(REQ_SIZE, mem);
 	free(mem);

@@ -1,3 +1,6 @@
+
+#ifdef LIST_TEST
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -110,3 +113,5 @@ static void rewrite(int* arr, struct cell* arr_l,  unsigned long long size) {
         cur = next_cell(cur);
     }
 }
+
+#endif

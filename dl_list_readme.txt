@@ -94,9 +94,10 @@ struct cell* find_list_elem(struct list_t* l, long long int name)
 struct cell* insert_to_head(struct list_t* l, struct cell* c)
 
 Перестановка элемента 
-struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next)
-Переставляет last found элемент cur в начало next. 
+struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next, struct cell* c)
+Переставляет last found элемент cur в начало next при с = NULL. 
 Cur и next могут быть как разными, так и одним и тем же списком.
+Если с != NULL, то переставляет его в начало next. Если с не принадлежит cur, то вам будет очень плохо.
 
 Удаляет последний элемент списка.
 void delete_last_elem(struct list_t* l)

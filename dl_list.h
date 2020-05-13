@@ -35,6 +35,17 @@ struct list_t* make_list(unsigned long long length);
 void destroy_list(struct list_t* l);
 struct cell* find_list_elem(struct list_t* l, long long int name);
 struct cell* insert_to_head(struct list_t* l, struct cell* c);
+struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next, struct cell* c);
+void delete_last_elem(struct list_t* l);
+
+
+void list_test();
+
+
+struct list_t* make_list(unsigned long long length);
+void destroy_list(struct list_t* l);
+struct cell* find_list_elem(struct list_t* l, long long int name);
+struct cell* insert_to_head(struct list_t* l, struct cell* c);
 struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next);
 void delete_last_elem(struct list_t* l);
 

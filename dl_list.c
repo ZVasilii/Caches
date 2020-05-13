@@ -50,11 +50,13 @@ struct cell* insert_to_head(struct list_t* l, struct cell* c) {
     return c;
 }
 
-struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next) {
-    struct cell* c;
+struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next, struct cell* c) {
     assert(cur != NULL);
     assert(cur->head != NULL);
     assert(next != NULL);
+    if(c != NULL) {
+        cur->last_found = c;
+    }
     if(cur->last_found == NULL) {
         return NULL;
     }

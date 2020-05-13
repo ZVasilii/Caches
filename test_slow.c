@@ -45,10 +45,10 @@ void remove_cache(struct cache_t* cache_mem)
 }
 
 //Finding page in memory 
-struct page_t* find_page(int number, struct page_t* mem, size_t size)
+struct page_t* find_page(int number, struct page_t* mem)
 {
 	assert(mem && "Find_P");
-	for(int i = 0; i < size; i++)
+	for(int i = 0; i < MEM_SIZE; i++)
 	{
 		if (mem[i].index == number)
 			return mem + i;

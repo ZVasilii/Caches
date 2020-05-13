@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <assert.h>
 #include "pages.h"
+#include <string.h>
 
-const int c = 10;
-
+/*
 struct list_t {
 	struct cell* head;
 	unsigned long long length;
@@ -17,19 +17,12 @@ struct cell {
 	struct cell* prev;
 	struct cell* next;
 	long long int data;
-	struct page_t* page_ptr;
+	struct cache_t* cache_ptr;
 };
+*/
 
-void replace(int *p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2)
+void replace(int *p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem)
 {
-	/*
-	if ((cachesize(T1) >=1) && ((find(x, B2) && (cachesize(T1) == p)) || (cachesize(T1) >= p)))
-	/move LRU page of T1 to the bottom of B1
-	remove it from the cache
-	else
-	move LRU page of T2 to the bottom of B2
-	remove it from the cache
-	*/
 	struct cell* page_in_B2 = find_cell(B2, page_name);
 	if (((T1->length) >=1) && (((page_in_B2 != NULL) && ((T1->length) == (*p))) || ((T1->length) >= (*p))))
 	{
@@ -38,7 +31,7 @@ void replace(int *p, long long int page_name, struct list_t* T1, struct list_t* 
 		remove it from the cache
 		*/
 		replace_lf_to_head(T1, B1, NULL);
-		//remove it from the cache
+		B1->head->cache_ptr->flag = 0;
 	}
 	else
 	{
@@ -47,20 +40,35 @@ void replace(int *p, long long int page_name, struct list_t* T1, struct list_t* 
 		remove it from the cache
 		*/
 		replace_lf_to_head(T2, B2, NULL);
-		//remove it from the cache
+		B2->head->cache_ptr->flag = 0;
 	}
 }
 
-struct cell* insert_in_head(struct list_t* part, long long int page_name, struct page_t* page_ptr)
+struct cell* insert_in_head(struct list_t* part, long long int page_name, struct page_t* cache_ptr)
 {
 	struct cell* new_head = (struct cell*)calloc(1, sizeof(struct cell));
-	assert(new_head == NULL);
+	assert((new_head == NULL) && "No memory for new head");
 	new_head->data = page_name;
-	new_head->page_ptr = page_ptr;
+	new_head->cache_ptr = cache_ptr;
 	return insert_to_head(part, new_head);
 }
 
-struct cell* fast_get_page(long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, int *p)			//main function of ARC
+struct cache_t* from_mem_to_cache_mem(long long int page_name, struct page_t* mem, struct cache_t* cache_mem)
+{
+	int i = 0;
+	struct page_t* page_in_mem = find_page(page_name, mem);
+	assert(page_in_mem && "No such page in memory");
+	for (i = 0; i < CACHE_SIZE; i++)
+		if (cache_mem[i].flag == 0)
+		{
+			cache_mem[i].flag == 1;
+			memcpy(&cache_mem[i].page, page_in_mem, sizeof(struct page_t));
+			return (&cache_mem[i]);
+		}
+	assert((i == CACHE_SIZE) && "No free space in cache memory");
+}
+
+struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem)			//main function of ARC
 {									
 	/*
 	int p = 0;
@@ -84,7 +92,7 @@ struct cell* fast_get_page(long long int page_name, struct list_t* T1, struct li
 	}
 
 	struct cell* page_in_B1 = find_cell(B1, page_name);
-	if (page_in_B1 != NULL)							//case 2
+	if (page_in_B1 != NULL)											//case 2
 	{
 		/*
 		p = min(c, p + max(cachesize(B2)/cachesize(B1), 1);
@@ -92,15 +100,16 @@ struct cell* fast_get_page(long long int page_name, struct list_t* T1, struct li
 		move x to the top of T2
 		place x into the cache
 		*/
-		*p = min(c, p + max((B2->length) / (B1->length), 1));
-		replace(p, page_name, T1, T2, B1, B2);
+		*p = min(CACHE_SIZE, p + max((B2->length) / (B1->length), 1));
+		replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
 		replace_lf_to_head(B1, T2, page_in_B1);
-		//place x into the cache
+		struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
+		T2->head->cache_ptr = temp;
 		return T2->head;
 	}
 
 	struct cell* page_in_B2 = find_cell(B2, page_name);
-	if (page_in_B2 != NULL)								//case 3
+	if (page_in_B2 != NULL)											//case 3
 	{
 		/*
 		p = max(0, p - max(cachesize(B1)/cachesize(B2), 1);
@@ -109,24 +118,25 @@ struct cell* fast_get_page(long long int page_name, struct list_t* T1, struct li
 		place x into the cache
 		*/
 		*p = max(0, p - max((B1->length) / (B2->length), 1));
-		replace(p, page_name, T1, T2, B1, B2);
+		replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
 		replace_lf_to_head(B2, T2, page_in_B2);
-		//place x into the cache 
+		struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
+		T2->head->cache_ptr = temp;
 		return T2->head;
 	}
 
 
 	int L1_length = (B1->length) + (T1->length);
 	int L2_length = (B2->length) + (T2->length);
-	if (L1_length == c)						//case 4.1
-		if (((T1->length)) < c)
+	if (L1_length == CACHE_SIZE)												//case 4.1
+		if (((T1->length)) < CACHE_SIZE)
 		{
 			/*
 			delete LRU page of B1
 			replace(p)
 			*/
 			delete_last_elem(B1);
-			replace(p, page_name, T1, T2, B1, B2);
+			replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
 		}
 		else
 		{
@@ -134,23 +144,24 @@ struct cell* fast_get_page(long long int page_name, struct list_t* T1, struct li
 			delete LRU page of T1
 			remove it from the cache
 			*/
+			T1->last_found->cache_ptr->flag = 0;
+			delete_last_elem(T1);
 		}			
-	else if ((L1_length < c) && ((L1_length + L2_length) >= c))  //case 4.2
-		if ((L1_length + L2_length) == (2 * c))
+	else if ((L1_length < CACHE_SIZE) && ((L1_length + L2_length) >= CACHE_SIZE))		//case 4.2
+		if ((L1_length + L2_length) == (2 * CACHE_SIZE))
 		{
 			/*
 			delete the LRU page of B2
 			replace(p)
 			*/
 			delete_last_elem(B2);
-			replace(p, page_name, T1, T2, B1, B2);
+			replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
 		}
 	/*
 	put x at the top of T1
 	place it into the cache
 	*/
-	//page_t* page_ptr = find_mem(page_name);
-	insert_in_head(T1, page_name, page_ptr);
-	//place it into the cache
+	struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
+	insert_in_head(T1, page_name, temp);
 	return T1->head;
 }

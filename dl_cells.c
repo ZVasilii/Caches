@@ -99,13 +99,13 @@ void destroy_all_cells(struct cell* c) {
     }
 }
 
-struct cell* set_page(struct cell* c, struct cache_t* new_page) {
+struct cell* set_cache(struct cell* c, struct cache_t* new_page) {
     assert(c != NULL);
     c->cache_ptr = new_page;
     return c;
 }
 
-struct cache_t* cell_page(struct cell* c) {
+struct cache_t* cell_cache(struct cell* c) {
     assert(c != NULL);
     return c->cache_ptr;
 }

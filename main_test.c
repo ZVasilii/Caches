@@ -152,7 +152,7 @@ void request(   int mode,
 		{
 			req_n = rand() % MEM_SIZE;
 			buffer =  fast_get_page(p, req_n, T1, T2, B1, B2, mem, cache_mem);
-			memcpy(target, &(cell_page(buffer)->page), sizeof(struct page_t));
+			memcpy(target, &(cell_cache(buffer)->page), sizeof(struct page_t));
 
 			#ifdef PRINT
 			print_page(target);

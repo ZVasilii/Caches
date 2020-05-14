@@ -36,7 +36,8 @@ void replace(int *p, long long int page_name, struct list_t* T1, struct list_t* 
 		remove it from the cache
 		*/
 		replace_lf_to_head(T1, B1, T1->end);
-		B1->head->cache_ptr->flag = 0;
+		struct cache_t* temp = cell_page(B1->head);
+		temp->flag = 0;
 	}
 	else
 	{
@@ -45,7 +46,8 @@ void replace(int *p, long long int page_name, struct list_t* T1, struct list_t* 
 		remove it from the cache
 		*/
 		replace_lf_to_head(T2, B2, T2->end);
-		B2->head->cache_ptr->flag = 0;
+		struct cache_t* temp = cell_page(B2->head);
+		temp->flag = 0;
 	}
 }
 
@@ -160,7 +162,8 @@ struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, s
 			delete LRU page of T1
 			remove it from the cache
 			*/
-			T1->end->cache_ptr->flag = 0;
+			struct cache_t* temp = cell_page(T1->end);
+			temp->flag = 0;
 			delete_last_elem(T1);
 		}			
 	else if ((L1_length < CACHE_SIZE) && ((L1_length + L2_length) >= CACHE_SIZE))		//case 4.2

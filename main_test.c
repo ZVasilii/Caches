@@ -130,7 +130,7 @@ void request(   int mode,
 	srand(time(NULL));
 	struct page_t* target = (struct page_t*) calloc (1, sizeof(struct page_t));
 	long long int req_n = 0;
-	struct cell* buffer = (struct cell*) calloc (1, sizeof(struct cell));
+	struct cell* buffer = make_cell();
 
 
 	if (mode == SLOW)
@@ -152,7 +152,7 @@ void request(   int mode,
 		{
 			req_n = rand() % MEM_SIZE;
 			buffer =  fast_get_page(p, req_n, T1, T2, B1, B2, mem, cache_mem);
-			memcpy(target, &(buffer -> cache_ptr -> page), sizeof(struct page_t));
+			memcpy(target, &(cell_page(buffer)->page), sizeof(struct page_t));
 
 			#ifdef PRINT
 			print_page(target);

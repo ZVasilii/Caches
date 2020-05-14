@@ -144,7 +144,9 @@ struct cell* make_cell_np(long long int name, struct cache_t* new_page) {
 
 struct cell* find_cell(struct cell* c, long long int name) {
     struct cell *s;
-    assert(c != NULL);
+    if(c == NULL) {
+        return NULL;
+    }
     if(c->data == name) {
         return c;
     }

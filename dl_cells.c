@@ -11,7 +11,7 @@ struct cell {
     struct cell* prev;
     struct cell* next;
     long long int data;
-    struct page_t* page_ptr;
+    struct cache_t* cache_ptr;
 };
 
 static void close_hole(struct cell* c);
@@ -23,7 +23,7 @@ struct cell* make_cell() {
     c->prev = NULL;
     c->next = NULL;
     c->data = 0;
-    c->page_ptr = NULL;
+    c->cache_ptr = NULL;
     return c;
 }
 
@@ -100,15 +100,15 @@ void destroy_all_cells(struct cell* c) {
     }
 }
 
-struct cell* set_page(struct cell* c, struct page_t* new_page) {
+struct cell* set_page(struct cell* c, struct cache_t* new_page) {
     assert(c != NULL);
-    c->page_ptr = new_page;
+    c->cache_ptr = new_page;
     return c;
 }
 
-struct page_t* cell_page(struct cell* c) {
+struct cache_t* cell_page(struct cell* c) {
     assert(c != NULL);
-    return c->page_ptr;
+    return c->cache_ptr;
 }
 
 static void close_hole(struct cell* c) {
@@ -127,17 +127,17 @@ struct cell* make_cell_n(long long int name) {
     return c;
 }
 
-struct cell* make_cell_p(struct page_t* new_page) {
+struct cell* make_cell_p(struct cache_t* new_page) {
     struct cell* c;
     c = make_cell();
-    c->page_ptr = new_page;
+    c->cache_ptr = new_page;
     return c;
 }
 
-struct cell* make_cell_np(long long int name, struct page_t* new_page) {
+struct cell* make_cell_np(long long int name, struct cache_t* new_page) {
     struct cell* c;
     c = make_cell();
-    c->page_ptr = new_page;
+    c->cache_ptr = new_page;
     c->data = name;
     return c;
 }

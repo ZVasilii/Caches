@@ -13,7 +13,7 @@ struct cell {
     struct cell* prev;
     struct cell* next;
     long long int data;
-    struct page_t* page_ptr;
+    struct cache_t* cache_ptr;
 };
 
 Доступные функции:
@@ -24,9 +24,9 @@ struct cell* make_cell()
 Не забудьте почистить память после использования. 
 struct cell* make_cell_n(long long int name)
 Создает ячейку с заданным именем
-struct cell* make_cell_p(long long int name, struct page_t* page_ptr)
+struct cell* make_cell_p(long long int name, struct cache_t* cache_ptr)
 Создает ячейку с заданным указателем.
-struct cell* make_cell_np(long long int name, struct page_t* page_ptr)
+struct cell* make_cell_np(long long int name, struct cache_t* cache_ptr)
 Создает ячейку с заданным именем и указателем.
 
 Уничтожение ячейки: 
@@ -53,10 +53,10 @@ struct cell* prev_cell(struct cell* c)
 Получает указатель на текущую ячейку, возвращает указатель на следующую/предыдущую.
 
 Работа с указателем ячейки:
-struct cell* set_page(struct cell* c, struct page_t* page_ptr)
+struct cell* set_page(struct cell* c, struct cache_t* cache_ptr)
 Записывает в ячейку значение введенного указателя, старый при наличии безвозвратно затирается.
 Возращает указатель на ячейку.
-struct page_t* cell_page(struct cell* c)
+struct cache_t* cell_page(struct cell* c)
 Возвращает записанный в ячейку указатель. При отстутствии возращает NULL.
 
 Поиск ячейки:

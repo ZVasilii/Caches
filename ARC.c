@@ -51,15 +51,14 @@ void replace(int *p, long long int page_name, struct list_t* T1, struct list_t* 
 
 struct cell* insert_in_head(struct list_t* part, long long int page_name, struct cache_t* cache_ptr)
 {
-	struct cell* new_head = (struct cell*) calloc (1, sizeof(struct cell));
-	assert((new_head != NULL) && "No memory for new head");
-	new_head->data = page_name;
-	new_head->cache_ptr = cache_ptr;
+	//insert new cell in this part with these cache_ptr and page_name
+	struct cell* new_head = make_cell_np(page_name, cache_ptr);
 	return insert_to_head(part, new_head);
 }
 
 struct cache_t* from_mem_to_cache_mem(long long int page_name, struct page_t* mem, struct cache_t* cache_mem)
 {
+	//copying page with page_name from mem to cache_mem
 	int i = 0;
 	struct page_t* page_in_mem = find_page(page_name, mem);
 	assert(page_in_mem && "No such page in memory");

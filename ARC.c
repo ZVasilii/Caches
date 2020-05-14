@@ -119,7 +119,7 @@ struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, s
 		replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
 		replace_lf_to_head(B1, T2, page_in_B1);
 		struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
-		T2->head->cache_ptr = temp;
+		set_page(T2->head, temp);
 		return T2->head;
 	}
 
@@ -137,7 +137,7 @@ struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, s
 		replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
 		replace_lf_to_head(B2, T2, page_in_B2);
 		struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
-		T2->head->cache_ptr = temp;
+		set_page(T2->head, temp);
 		return T2->head;
 	}
 

@@ -24,6 +24,17 @@ struct cell {
 };
 */
 
+int max (int a, int b)
+{
+	if (a >=b) return a;
+	else return b;
+}
+
+int min(int a, int b)
+{
+	if (a <=b) return a;
+	else return b;
+}
 
 
 void replace(int *p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem)
@@ -60,6 +71,11 @@ struct cell* insert_in_head(struct list_t* part, long long int page_name, struct
 
 struct cache_t* from_mem_to_cache_mem(long long int page_name, struct page_t* mem, struct cache_t* cache_mem)
 {
+	#ifdef DELAY
+	printf("CACHE_MISS!\n");
+	my_delay(MEM_DELAY);
+	#endif
+	
 	//copying page with page_name from mem to cache_mem
 	int i = 0;
 	struct page_t* page_in_mem = find_page(page_name, mem);
@@ -69,14 +85,10 @@ struct cache_t* from_mem_to_cache_mem(long long int page_name, struct page_t* me
 		{
 			cache_mem[i].flag = 1;
 			memcpy(&cache_mem[i].page, page_in_mem, sizeof(struct page_t));
+			assert(((cache_mem + i) != NULL) && "Mem to cache");
 			return (&cache_mem[i]);
 		}
 	assert((i == CACHE_SIZE) && "No free space in cache memory");
-
-	#ifdef DELAY
-	printf("CACHE_MISS!\n");
-	my_delay(MEM_DELAY);
-	#endif
 }
 
 struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem)			//main function of ARC
@@ -121,6 +133,7 @@ struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, s
 		replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
 		replace_lf_to_head(B1, T2, page_in_B1);
 		struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
+		assert(temp != NULL && "Page B1");
 		set_cache(T2->head, temp);
 		return T2->head;
 	}
@@ -139,6 +152,7 @@ struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, s
 		replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
 		replace_lf_to_head(B2, T2, page_in_B2);
 		struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
+		assert(temp != NULL && "Page B2");
 		set_cache(T2->head, temp);
 		return T2->head;
 	}
@@ -181,6 +195,7 @@ struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, s
 	place it into the cache
 	*/
 	struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
+	assert(temp != NULL && "Case 4.2");
 	insert_in_head(T1, page_name, temp);
 	return T1->head;
 }

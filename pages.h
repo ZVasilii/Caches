@@ -7,7 +7,7 @@ struct list_t;
 
 enum Size
 {
-    MEM_SIZE = 100,
+    MEM_SIZE = 10,
     REQ_SIZE = 10,
     DATA_SIZE = 60,
     CACHE_SIZE = 2,
@@ -22,8 +22,8 @@ enum Mode
 
 enum Delays
 {
-	MEM_DELAY = 1000,
-	CACHE_DELAY = 100,
+	MEM_DELAY = 10,
+	CACHE_DELAY = 10,
 };
 
 struct page_t

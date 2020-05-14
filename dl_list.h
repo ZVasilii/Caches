@@ -1,7 +1,10 @@
 #pragma once
 
-struct cell;
+
+
 struct page_t;
+
+
 
 struct list_t {
     struct cell* head;
@@ -9,6 +12,15 @@ struct list_t {
     struct cell* end;
     struct cell* last_found;
 };
+
+
+struct cell {
+    struct cell* prev;
+    struct cell* next;
+    long long int data;
+    struct cache_t* cache_ptr;
+};
+
 
 struct cell* make_cell();
 struct cell* make_cell_n(long long int name);
@@ -31,7 +43,7 @@ int is_last(struct cell* c);
 struct cell* extract_cell(struct cell* c);
 
 
-struct list_t* make_list(unsigned long long length);
+struct list_t* make_list();
 void destroy_list(struct list_t* l);
 struct cell* find_list_elem(struct list_t* l, long long int name);
 struct cell* insert_to_head(struct list_t* l, struct cell* c);

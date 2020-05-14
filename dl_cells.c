@@ -2,17 +2,9 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "pages.h"
 #include "dl_list.h"
-
-
-
-struct cell {
-    struct cell* prev;
-    struct cell* next;
-    long long int data;
-    struct cache_t* cache_ptr;
-};
+#include "pages.h"
+#include "ARC.h"
 
 static void close_hole(struct cell* c);
 

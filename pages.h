@@ -3,15 +3,27 @@
 #include <stddef.h>
 
 struct list_t;
-struct cell;
+
 
 enum Size
 {
     MEM_SIZE = 100,
     REQ_SIZE = 10,
     DATA_SIZE = 60,
-    CACHE_SIZE = 10,
+    CACHE_SIZE = 2,
 
+};
+
+enum Mode 
+{
+	FAST = 1,
+	SLOW = 0,
+};
+
+enum Delays
+{
+	MEM_DELAY = 1000,
+	CACHE_DELAY = 100,
 };
 
 struct page_t
@@ -38,4 +50,5 @@ void remove_cache(struct cache_t* cache_mem);
 struct page_t* find_page(int number, struct page_t* mem);
 void clear_everything(struct page_t* mem, struct cache_t* cache, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2);
 
+void my_delay(int millis);
 

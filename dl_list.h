@@ -3,8 +3,17 @@
 
 
 struct page_t;
+struct cache_t;
 
 
+
+
+struct cell {
+    struct cell* prev;
+    struct cell* next;
+    long long int data;
+    struct cache_t* cache_ptr;
+};
 
 struct list_t {
     struct cell* head;

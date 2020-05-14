@@ -75,12 +75,17 @@ void print_page(struct page_t* target)
 {
 	assert(target && "Print");
 	printf("\n");
+	printf("################################");
+	printf("\n");
+	printf("Page requested!\n");
 	printf("Index: %d\n", target -> index);
 	printf("Data: ");
 	for (int j = 0; j < DATA_SIZE; j++)
 	{
 		printf("%c", target -> data[j]);
 	}
+	printf("\n");
+	printf("################################");
 	printf("\n");
 }
 
@@ -91,6 +96,9 @@ void slow_get_page (struct page_t* target, struct page_t* mem, int number)
 	assert(target && "Get_P");
 	struct page_t* page = find_page(number, mem);
 	memcpy(target, page,  sizeof(struct page_t));
+	#ifdef DELAY
+	my_delay(MEM_DELAY);
+	#endif
 
 }
 
@@ -111,16 +119,22 @@ void clear_everything(  struct page_t*  mem,
 
 
 //Testing function that requests page with random index
-void request(int mode, int size, int* p,struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem)
+void request(   int mode, 
+				int size,
+				int* p,struct list_t* T1, 
+				struct list_t* T2, struct list_t* B1, 
+				struct list_t* B2, 
+				struct page_t* mem, 
+				struct cache_t* cache_mem)
 {
 	assert(mem && "Request");
 	srand(time(NULL));
 	struct page_t* target = (struct page_t*) calloc (1, sizeof(struct page_t));
 	long long int req_n = 0;
-	struct cell* buffer = (struct cell*) calloc (1, sizeof(struct page_t));
+	struct cell* buffer = (struct cell*) calloc (1, sizeof(struct cell));
 
 
-	if (mode == 0)
+	if (mode == SLOW)
 	{
 		for (int i = 0; i < size; i++)
 		{
@@ -128,13 +142,12 @@ void request(int mode, int size, int* p,struct list_t* T1, struct list_t* T2, st
 			slow_get_page(target, mem, req_n); 
 
 			#ifdef PRINT
-			printf("%lld page requested\n", req_n);
 			print_page(target);
 			#endif
 		}
 	}
 
-	if (mode == 1)
+	if (mode == FAST)
 	{
 		for (int i = 0; i < size; i++)
 		{
@@ -143,7 +156,6 @@ void request(int mode, int size, int* p,struct list_t* T1, struct list_t* T2, st
 			memcpy(target, &(buffer -> cache_ptr -> page), sizeof(struct page_t));
 
 			#ifdef PRINT
-			printf("%lld page requested\n", req_n);
 			print_page(target);
 			#endif
 		}
@@ -152,24 +164,57 @@ void request(int mode, int size, int* p,struct list_t* T1, struct list_t* T2, st
 	free(target);
 }
 
+void my_delay(int millis)
+{
+	millis *=1000;
+	clock_t start_time = clock(); 
+  
+    while (clock() < start_time + millis) 
+    {}
+}
 
 int main()
 {
 	int p = 0; //Param for ARC algorithm
 
+	long int start_t = 0.0;
+	long int end_t = 0.0;
+
 	struct page_t*  mem = create_fill_mem(MEM_SIZE);
-	struct cache_t* cache_mem = create_fill_cache(CACHE_SIZE);
+	struct cache_t* cache_mem = create_fill_cache(2 * CACHE_SIZE);
 	struct list_t* T1 = make_list();
 	struct list_t* T2 = make_list();
 	struct list_t* B1 = make_list();
 	struct list_t* B2 = make_list();
 
 	assert(mem != NULL);
+
+	#ifdef TIME
+	start_t = clock();
+	#endif
+
 	printf("Request from memory\n");
-	request(0, REQ_SIZE, &p, T1, T2, B1, B2, mem, cache_mem);
+	request(SLOW, REQ_SIZE, &p, T1, T2, B1, B2, mem, cache_mem);
+
+	#ifdef TIME
+	end_t = clock();
+	printf("Time spent on slow request: %lg seconds\n", ((double) (end_t - start_t))/CLOCKS_PER_SEC);
+	#endif
+
+
+
+	#ifdef TIME
+	start_t = clock();
+	#endif
+
 	printf("Request from cache\n");
-	request(1, REQ_SIZE, &p, T1, T2, B1, B2, mem, cache_mem);
+	request(FAST, REQ_SIZE, &p, T1, T2, B1, B2, mem, cache_mem);
 	
+	#ifdef TIME
+	end_t = clock();
+	printf("Time spent on fast request: %lg seconds\n", ((double) (end_t - start_t))/CLOCKS_PER_SEC);
+	#endif
+
 	clear_everything(mem, cache_mem, T1, T2, B1, B2);
 
 	return 0;

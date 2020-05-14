@@ -63,7 +63,7 @@ void replace(int *p, long long int page_name, struct list_t* T1, struct list_t* 
 struct cell* insert_in_head(struct list_t* part, long long int page_name, struct cache_t* cache_ptr)
 {
 	struct cell* new_head = (struct cell*) calloc (1, sizeof(struct cell));
-	assert((new_head == NULL) && "No memory for new head");
+	assert((new_head != NULL) && "No memory for new head");
 	new_head->data = page_name;
 	new_head->cache_ptr = cache_ptr;
 	return insert_to_head(part, new_head);
@@ -74,18 +74,27 @@ struct cache_t* from_mem_to_cache_mem(long long int page_name, struct page_t* me
 	int i = 0;
 	struct page_t* page_in_mem = find_page(page_name, mem);
 	assert(page_in_mem && "No such page in memory");
-	for (i = 0; i < CACHE_SIZE; i++)
+	for (i = 0; i < 2 * CACHE_SIZE; i++)
 		if (cache_mem[i].flag == 0)
 		{
 			cache_mem[i].flag == 1;
 			memcpy(&cache_mem[i].page, page_in_mem, sizeof(struct page_t));
 			return (&cache_mem[i]);
 		}
-	assert((i == CACHE_SIZE) && "No free space in cache memory");
+	assert((i == 2 * CACHE_SIZE) && "No free space in cache memory");
+
+	#ifdef DELAY
+	printf("CACHE_MISS!\n");
+	my_delay(MEM_DELAY);
+	#endif
 }
 
 struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem)			//main function of ARC
-{									
+{		
+	#ifdef DELAY
+	my_delay(CACHE_DELAY);
+	#endif
+
 	/*
 	int p = 0;
 	long long int page_name;

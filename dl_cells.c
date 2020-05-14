@@ -6,12 +6,14 @@
 #include "pages.h"
 #include "ARC.h"
 
+/*
 struct cell {
     struct cell* prev;
     struct cell* next;
     long long int data;
     struct cache_t* cache_ptr;
 };
+*/
 
 static void close_hole(struct cell* c);
 

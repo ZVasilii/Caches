@@ -14,14 +14,6 @@ struct list_t {
 };
 
 
-struct cell {
-    struct cell* prev;
-    struct cell* next;
-    long long int data;
-    struct cache_t* cache_ptr;
-};
-
-
 struct cell* make_cell();
 struct cell* make_cell_n(long long int name);
 struct cell* make_cell_p(struct cache_t* new_page);

@@ -117,6 +117,8 @@ static void close_hole(struct cell* c) {
     if(c->next != NULL) {
         c->next->prev = c->prev;
     }
+    c->prev = NULL;
+    c->next = NULL;
 }
 
 struct cell* make_cell_n(long long int name) {

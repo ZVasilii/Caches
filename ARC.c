@@ -24,17 +24,6 @@ struct cell {
 };
 */
 
-int max (int a, int b)
-{
-	if (a >=b) return a;
-	else return b;
-}
-
-int min(int a, int b)
-{
-	if (a <=b) return a;
-	else return b;
-}
 
 
 void replace(int *p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem)
@@ -46,7 +35,7 @@ void replace(int *p, long long int page_name, struct list_t* T1, struct list_t* 
 		move LRU page of T1 to the top of B1
 		remove it from the cache
 		*/
-		replace_lf_to_head(T1, B1, NULL);
+		replace_lf_to_head(T1, B1, T1->end);
 		B1->head->cache_ptr->flag = 0;
 	}
 	else
@@ -55,7 +44,7 @@ void replace(int *p, long long int page_name, struct list_t* T1, struct list_t* 
 		move LRU page of T2 to the top of B2
 		remove it from the cache
 		*/
-		replace_lf_to_head(T2, B2, NULL);
+		replace_lf_to_head(T2, B2, T2->end);
 		B2->head->cache_ptr->flag = 0;
 	}
 }
@@ -74,14 +63,14 @@ struct cache_t* from_mem_to_cache_mem(long long int page_name, struct page_t* me
 	int i = 0;
 	struct page_t* page_in_mem = find_page(page_name, mem);
 	assert(page_in_mem && "No such page in memory");
-	for (i = 0; i < 2 * CACHE_SIZE; i++)
+	for (i = 0; i < CACHE_SIZE; i++)
 		if (cache_mem[i].flag == 0)
 		{
-			cache_mem[i].flag == 1;
+			cache_mem[i].flag = 1;
 			memcpy(&cache_mem[i].page, page_in_mem, sizeof(struct page_t));
 			return (&cache_mem[i]);
 		}
-	assert((i == 2 * CACHE_SIZE) && "No free space in cache memory");
+	assert((i == CACHE_SIZE) && "No free space in cache memory");
 
 	#ifdef DELAY
 	printf("CACHE_MISS!\n");
@@ -172,7 +161,7 @@ struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, s
 			delete LRU page of T1
 			remove it from the cache
 			*/
-			T1->last_found->cache_ptr->flag = 0;
+			T1->end->cache_ptr->flag = 0;
 			delete_last_elem(T1);
 		}			
 	else if ((L1_length < CACHE_SIZE) && ((L1_length + L2_length) >= CACHE_SIZE))		//case 4.2

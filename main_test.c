@@ -10,7 +10,6 @@
 #include "ARC.h"
 
 
-
 //Creating main memory of MEM_SIZE
 struct page_t* create_fill_mem (size_t size)
 {

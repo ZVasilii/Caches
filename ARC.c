@@ -24,13 +24,13 @@ struct cell {
 };
 */
 
-int max (int a, int b)
+int imax (int a, int b)
 {
 	if (a >=b) return a;
 	else return b;
 }
 
-int min(int a, int b)
+int imin(int a, int b)
 {
 	if (a <=b) return a;
 	else return b;
@@ -86,8 +86,10 @@ struct cache_t* from_mem_to_cache_mem(long long int page_name, struct page_t* me
 			cache_mem[i].flag = 1;
 			memcpy(&cache_mem[i].page, page_in_mem, sizeof(struct page_t));
 			assert(((cache_mem + i) != NULL) && "Mem to cache");
-			return (&cache_mem[i]);
+			return (cache_mem + i);
 		}
+	if (i == CACHE_SIZE)
+		exit(666);
 	assert((i == CACHE_SIZE) && "No free space in cache memory");
 }
 
@@ -129,7 +131,7 @@ struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, s
 		move x to the top of T2
 		place x into the cache
 		*/
-		*p = min(CACHE_SIZE, *p + max((B2->length) / (B1->length), 1));
+		*p = imin(CACHE_SIZE, *p + imax((B2->length) / (B1->length), 1));
 		replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
 		replace_lf_to_head(B1, T2, page_in_B1);
 		struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
@@ -148,7 +150,7 @@ struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, s
 		move x to the top of T2
 		place x into the cache
 		*/
-		*p = max(0, *p - max((B1->length) / (B2->length), 1));
+		*p = imax(0, *p - imax((B1->length) / (B2->length), 1));
 		replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
 		replace_lf_to_head(B2, T2, page_in_B2);
 		struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
@@ -181,14 +183,16 @@ struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, s
 			delete_last_elem(T1);
 		}			
 	else if ((L1_length < CACHE_SIZE) && ((L1_length + L2_length) >= CACHE_SIZE))		//case 4.2
-		if ((L1_length + L2_length) == (2 * CACHE_SIZE))
-		{
-			/*
+	{
+		/*
+		if ()
 			delete the LRU page of B2
-			replace(p)
-			*/
+		replace(p)
+		*/
+		if ((L1_length + L2_length) == (2 * CACHE_SIZE))
 			delete_last_elem(B2);
-			replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
+
+		replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
 		}
 	/*
 	put x at the top of T1

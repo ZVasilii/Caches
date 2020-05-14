@@ -1,3 +1,7 @@
+#define DTIME
+#define DDELAY 
+#define DPRINT 
+
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -151,7 +155,15 @@ void request(   int mode,
 		for (int i = 0; i < size; i++)
 		{
 			req_n = rand() % MEM_SIZE;
+			//printf("request:%lld\n", req_n);
 			buffer =  fast_get_page(p, req_n, T1, T2, B1, B2, mem, cache_mem);
+			/*
+			int T1_length = T1->length;
+			int T2_length = T2->length;
+			int B1_length = B1->length;
+			int B2_length = B2->length;
+			printf("sizes now: %d\t%d\t%d\t%d\n",T1_length, T2_length,B1_length, B2_length);
+			*/
 			assert(buffer != NULL);
 			assert(cell_cache(buffer) != NULL);
 			assert(&(cell_cache(buffer)->page)!= NULL);
@@ -183,7 +195,7 @@ int main()
 	long int end_t = 0.0;
 
 	struct page_t*  mem = create_fill_mem(MEM_SIZE);
-	struct cache_t* cache_mem = create_fill_cache(2 * CACHE_SIZE);
+	struct cache_t* cache_mem = create_fill_cache(CACHE_SIZE);
 	struct list_t* T1 = make_list();
 	struct list_t* T2 = make_list();
 	struct list_t* B1 = make_list();
@@ -195,8 +207,8 @@ int main()
 	start_t = clock();
 	#endif
 
-///	printf("Request from memory\n");
-///	request(SLOW, REQ_SIZE, &p, T1, T2, B1, B2, mem, cache_mem);
+	//printf("Request from memory\n");
+	//request(SLOW, REQ_SIZE, &p, T1, T2, B1, B2, mem, cache_mem);
 
 	#ifdef TIME
 	end_t = clock();

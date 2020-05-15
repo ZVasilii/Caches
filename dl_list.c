@@ -12,6 +12,7 @@ struct list_t* make_list() {
     struct cell *cur, *creating;
     unsigned long long i;
     l = (struct list_t*) calloc(1, sizeof (struct list_t));
+    assert(l != NULL);
     l->length = 0;
     l->last_found = NULL;
     l->head = NULL;
@@ -80,6 +81,8 @@ void delete_last_elem(struct list_t* l) {
     if(l->end == NULL) {
         l->head = NULL;
     }
-    destroy_cell(next_cell(l->end));
+    if(l->end != NULL) {
+        destroy_cell(next_cell(l->end));
+    }
     l->length--;
 }

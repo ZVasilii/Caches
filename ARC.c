@@ -56,8 +56,11 @@ struct cell* insert_in_head(struct list_t* part, long long int page_name, struct
 
 struct cache_t* from_mem_to_cache_mem(long long int page_name, struct page_t* mem, struct cache_t* cache_mem)
 {
-	#ifdef DELAY
+	#ifdef PRINT_REQ
 	printf("CACHE_MISS!\n");
+	#endif
+
+	#ifdef DELAY
 	my_delay(MEM_DELAY);
 	#endif
 	

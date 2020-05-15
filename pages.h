@@ -8,9 +8,9 @@ struct list_t;
 enum Size
 {
     MEM_SIZE = 100,
-    REQ_SIZE = 10000,
+    REQ_SIZE = 50,
     DATA_SIZE = 60,
-    CACHE_SIZE = 10,
+    CACHE_SIZE = 50,
 
 };
 
@@ -22,7 +22,7 @@ enum Mode
 
 enum Delays
 {
-	MEM_DELAY = 10,
+	MEM_DELAY = 100,
 	CACHE_DELAY = 10,
 };
 
@@ -37,6 +37,7 @@ struct cache_t
 	struct page_t page;
 	int flag;
 };
+
 
 
 void slow_get_page (struct page_t* target, struct page_t* mem, int number);

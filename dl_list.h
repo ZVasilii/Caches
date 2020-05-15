@@ -48,3 +48,5 @@ void print_all_lists(struct list_t* T1, struct list_t* T2, struct list_t* B1, st
 
 
 void list_test();
+void color_on(const char* str);
+void color_off();

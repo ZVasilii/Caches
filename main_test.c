@@ -12,6 +12,7 @@
 #include "dl_list.h"
 #include "pages.h"
 #include "ARC.h"
+#include "colors.h"
 
 
 //Creating main memory of MEM_SIZE
@@ -78,7 +79,9 @@ void print_page(struct page_t* target)
 {
 	assert(target && "Print");
 	printf("\n");
+	color_on(BLUE);
 	printf("################################");
+	color_off();
 	printf("\n");
 	printf("Page requested!\n");
 	printf("Index: %d\n", target -> index);
@@ -88,7 +91,9 @@ void print_page(struct page_t* target)
 		printf("%c", target -> data[j]);
 	}
 	printf("\n");
+	color_on(BLUE);
 	printf("################################");
+	color_off();
 	printf("\n");
 }
 
@@ -119,6 +124,14 @@ void clear_everything(  struct page_t*  mem,
 	destroy_list(B1);
 	destroy_list(B2);
 } 
+void color_on(const char* str)
+{
+	printf("%s\n", str);
+}
+void color_off()
+{
+	printf(RES);
+}
 
 
 //Testing function that requests page with random index
@@ -156,9 +169,13 @@ void request(   int mode,
 		for (int i = 0; i < size; i++)
 		{
 			req_n = rand() % MEM_SIZE;
-			//printf("request:%lld\n", req_n);
+
 			buffer =  fast_get_page(p, req_n, T1, T2, B1, B2, mem, cache_mem, &T_hits);
-			//print_all_lists(T1, T2, B1, B2);
+
+			#ifdef PRINT_REQ
+			print_all_lists(T1, T2, B1, B2);
+			#endif
+
 			assert(buffer != NULL);
 			assert(cell_cache(buffer) != NULL);
 			assert(&(cell_cache(buffer)->page)!= NULL);
@@ -168,8 +185,11 @@ void request(   int mode,
 			print_page(target);
 			#endif
 		}
+		color_on(MAGENTA);
 		printf("Number of requests: %d\n", size);
 		printf("Number of hits: %d\n", T_hits);
+		printf("Hit ratio %lg percents\n", (double) T_hits/ (double) size * 100);
+		color_off();
 	}
 	buffer = NULL;
 	free(target);
@@ -188,8 +208,12 @@ int main()
 {
 	int p = 0; //Param for ARC algorithm
 
-	long int start_t = 0.0;
-	long int end_t = 0.0;
+	#ifdef TIME
+	long int start_t = 0;
+	long int end_t = 0;
+	double slow_t = 0.0;
+	double fast_t = 0.0;
+	#endif
 
 	struct page_t*  mem = create_fill_mem(MEM_SIZE);
 	struct cache_t* cache_mem = create_fill_cache(CACHE_SIZE);
@@ -204,12 +228,14 @@ int main()
 	start_t = clock();
 	#endif
 
-	//printf("Request from memory\n");
-	//request(SLOW, REQ_SIZE, &p, T1, T2, B1, B2, mem, cache_mem);
+	color_on(RED);
+	printf("Request from memory\n");
+	color_off();
+	request(SLOW, REQ_SIZE, &p, T1, T2, B1, B2, mem, cache_mem);
 
 	#ifdef TIME
 	end_t = clock();
-	printf("Time spent on slow request: %lg seconds\n", ((double) (end_t - start_t))/CLOCKS_PER_SEC);
+	slow_t = ((double) (end_t - start_t))/CLOCKS_PER_SEC;
 	#endif
 
 
@@ -218,12 +244,35 @@ int main()
 	start_t = clock();
 	#endif
 
+	color_on(RED);
 	printf("Request from cache\n");
+	color_off();
+
 	request(FAST, REQ_SIZE, &p, T1, T2, B1, B2, mem, cache_mem);
 	
 	#ifdef TIME
 	end_t = clock();
-	printf("Time spent on fast request: %lg seconds\n", ((double) (end_t - start_t))/CLOCKS_PER_SEC);
+	color_on(RED);
+	fast_t = ((double) (end_t - start_t))/CLOCKS_PER_SEC;
+	printf("Time spent on slow request: %lg seconds\n", slow_t);
+	printf("Time spent on fast request: %lg seconds\n", fast_t);
+	color_off();
+	#endif
+
+	#ifdef STATS
+
+	color_on(GREEN);
+	printf("**********************\n");
+	printf("STATS:\n");
+	printf("Memory size = %d\n", MEM_SIZE);
+	printf("Cache size = %d\n", CACHE_SIZE);
+	printf("Memory delay = %d millis\n", MEM_DELAY);
+	printf("Cache delay  = %d millis\n", CACHE_DELAY);
+	printf("Number of requests = %d\n", REQ_SIZE);
+	printf("**********************\n");
+	printf("\n");
+	color_off();
+
 	#endif
 
 	clear_everything(mem, cache_mem, T1, T2, B1, B2);

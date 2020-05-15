@@ -6,6 +6,7 @@
 
 ARC - Adaptive Replacement cache
 Подробнее можете почитать в данной статье:
+
 http://theory.stanford.edu/~megiddo/pdf/IEEE_COMPUTER_0404.pdf
 
 Авторы проекта: Студенты 1 курса ФРТК:
@@ -55,5 +56,6 @@ http://theory.stanford.edu/~megiddo/pdf/IEEE_COMPUTER_0404.pdf
 	-DCOLORS - Раскрашивает скучную жизнь в яркие цвета (Работает в Linux only)
 
 Будем рады отзывам о багах/ошибках
+
 Приятного использования!
 

@@ -67,6 +67,7 @@ struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next, struct 
         cur->end = prev_cell(cur->end);
     }
     c = extract_cell(cur->last_found);
+    cur->last_found = NULL;
     cur->length--;
     insert_to_head(next, c);
     return c;

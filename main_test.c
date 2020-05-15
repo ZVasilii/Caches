@@ -15,6 +15,7 @@
 #include "colors.h"
 #include "conditions.h"
 
+
 //Creating main memory of MEM_SIZE
 struct page_t* create_fill_mem (size_t size)
 {
@@ -30,6 +31,7 @@ struct page_t* create_fill_mem (size_t size)
 	return mem;
 }
 
+
 //Creating cache_memory of CACHE_SIZE
 struct cache_t* create_fill_cache (size_t size)
 {
@@ -38,6 +40,7 @@ struct cache_t* create_fill_cache (size_t size)
 	return cache_mem;
 }
 
+
 //Removing main memory
 void remove_mem(struct page_t* mem)
 {
@@ -45,12 +48,14 @@ void remove_mem(struct page_t* mem)
 	mem = NULL;
 }
 
+
 //Removing cache
 void remove_cache(struct cache_t* cache_mem)
 {
 	free(cache_mem);
 	cache_mem = NULL;
 }
+
 
 //Finding page in memory 
 struct page_t* find_page(long long int number, struct page_t* mem)
@@ -64,6 +69,7 @@ struct page_t* find_page(long long int number, struct page_t* mem)
 	exit(404);
 }
 
+
 //Printing memory
 void print_mem(struct page_t* mem)
 {
@@ -74,6 +80,7 @@ void print_mem(struct page_t* mem)
 	}
 
 }
+
 
 //Printing requested page
 void print_page(struct page_t* target)
@@ -98,6 +105,7 @@ void print_page(struct page_t* target)
 	printf("\n");
 }
 
+
 //Getting page without caching
 void slow_get_page (struct page_t* target, struct page_t* mem, long long int number)
 {
@@ -111,6 +119,7 @@ void slow_get_page (struct page_t* target, struct page_t* mem, long long int num
 
 }
 
+///CLEAR EVERYTHING!!!
 void clear_everything(  struct page_t*  mem,
 				    	struct cache_t* cache,
 						struct list_t* T1,
@@ -125,10 +134,14 @@ void clear_everything(  struct page_t*  mem,
 	destroy_list(B1);
 	destroy_list(B2);
 } 
+
+///Toggle console-color on
 void color_on(const char* str)
 {
 	printf("%s\n", str);
 }
+
+///Toggle console-color off
 void color_off()
 {
 	printf(RES);
@@ -196,6 +209,7 @@ void request(   int mode,
 	free(target);
 }
 
+///Artificial Delay function
 void my_delay(int millis)
 {
 	millis *=1000;
@@ -205,6 +219,7 @@ void my_delay(int millis)
     {}
 }
 
+///General function
 int main()
 {
 	unsigned long long p = 0; //Param for ARC algorithm
@@ -216,6 +231,7 @@ int main()
 	double fast_t = 0.0;
 	#endif
 
+	///Initializing
 	struct page_t*  mem = create_fill_mem(MEM_SIZE);
 	struct cache_t* cache_mem = create_fill_cache(CACHE_SIZE);
 	struct list_t* T1 = make_list();
@@ -229,6 +245,7 @@ int main()
 	start_t = clock();
 	#endif
 
+	///Slow requesting, without cache
 	color_on(RED);
 	printf("Request from memory\n");
 	color_off();
@@ -239,18 +256,18 @@ int main()
 	slow_t = ((double) (end_t - start_t))/CLOCKS_PER_SEC;
 	#endif
 
-
-
 	#ifdef TIME
 	start_t = clock();
 	#endif
 
+	///Fast requesting, using ARC
 	color_on(RED);
 	printf("Request from cache\n");
 	color_off();
 
 	request(FAST, REQ_SIZE, &p, T1, T2, B1, B2, mem, cache_mem);
 	
+	///Timing functions
 	#ifdef TIME
 	end_t = clock();
 	color_on(RED);
@@ -260,6 +277,8 @@ int main()
 	color_off();
 	#endif
 
+
+	///Wanna see some statistics????
 	#ifdef STATS
 
 	color_on(GREEN);
@@ -276,6 +295,7 @@ int main()
 
 	#endif
 
+	///Always clear the memory after yourself!
 	clear_everything(mem, cache_mem, T1, T2, B1, B2);
 
 	return 0;

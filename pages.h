@@ -2,17 +2,19 @@
 
 #include <stddef.h>
 
+///List Declaration
 struct list_t;
 
-
+///Constants (See more in README)
 enum Size
 {
-    MEM_SIZE = 10,
-    REQ_SIZE = 50,
+    MEM_SIZE = 100,
+    REQ_SIZE = 10,
     DATA_SIZE = 60,
-    CACHE_SIZE = 2,
+    CACHE_SIZE = 5,
 
 };
+
 
 enum Mode 
 {
@@ -26,12 +28,14 @@ enum Delays
 	CACHE_DELAY = 10,
 };
 
+///Page structure
 struct page_t
 {
     long long int index;
     char data[DATA_SIZE];
 };
 
+///Cache-memory 
 struct cache_t
 {
 	struct page_t page;

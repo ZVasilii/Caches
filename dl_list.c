@@ -101,3 +101,19 @@ void print_list(struct list_t* l) {
     }
     printf("|");
 }
+
+void print_all_lists(struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2)
+{
+    printf("T1:");
+    print_list(T1);
+    printf("\t");
+    printf("T2:");
+    print_list(T2);
+    printf("\t");
+    printf("B1:");
+    print_list(B1);
+    printf("\t");
+    printf("B2:");
+    print_list(B2);
+    printf("\n");
+}

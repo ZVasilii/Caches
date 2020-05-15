@@ -152,18 +152,13 @@ void request(   int mode,
 
 	if (mode == FAST)
 	{
+		int T_hits = 0;
 		for (int i = 0; i < size; i++)
 		{
 			req_n = rand() % MEM_SIZE;
 			//printf("request:%lld\n", req_n);
-			buffer =  fast_get_page(p, req_n, T1, T2, B1, B2, mem, cache_mem);
-			/*
-			int T1_length = T1->length;
-			int T2_length = T2->length;
-			int B1_length = B1->length;
-			int B2_length = B2->length;
-			printf("sizes now: %d\t%d\t%d\t%d\n",T1_length, T2_length,B1_length, B2_length);
-			*/
+			buffer =  fast_get_page(p, req_n, T1, T2, B1, B2, mem, cache_mem, &T_hits);
+			//print_all_lists(T1, T2, B1, B2);
 			assert(buffer != NULL);
 			assert(cell_cache(buffer) != NULL);
 			assert(&(cell_cache(buffer)->page)!= NULL);
@@ -173,6 +168,8 @@ void request(   int mode,
 			print_page(target);
 			#endif
 		}
+		printf("Number of requests: %d\n", size);
+		printf("Number of hits: %d\n", T_hits);
 	}
 	buffer = NULL;
 	free(target);

@@ -78,7 +78,7 @@ struct cache_t* from_mem_to_cache_mem(long long int page_name, struct page_t* me
 		exit(666);
 }
 
-struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem)			//main function of ARC
+struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem, int* T_hits)			//main function of ARC
 {		
 	#ifdef DELAY
 	my_delay(CACHE_DELAY);
@@ -92,6 +92,8 @@ struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, s
 		/*
 		move x to the top of T2
 		*/
+		(*T_hits)++;
+		//printf("HIT!\n");
 		if (page_in_T1 != NULL)
 			return replace_lf_to_head(T1, T2, page_in_T1);
 		if (page_in_T2 != NULL)

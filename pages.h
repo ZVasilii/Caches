@@ -10,7 +10,7 @@ enum Size
     MEM_SIZE = 10,
     REQ_SIZE = 10,
     DATA_SIZE = 60,
-    CACHE_SIZE = 2,
+    CACHE_SIZE = 10,
 
 };
 

@@ -86,3 +86,18 @@ void delete_last_elem(struct list_t* l) {
     destroy_cell(c);
     l->length--;
 }
+
+void print_list(struct list_t* l) {
+    struct cell* c;
+    assert(l != NULL);
+    printf("|");
+    if(l->head != NULL) {
+        printf("%lld", cell_name(l->head));
+    }
+    c = next_cell(l->head);
+    while(c != NULL) {
+        printf(", %lld", cell_name(c));
+        c = next_cell(c);
+    }
+    printf("|");
+}

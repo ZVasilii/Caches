@@ -8,6 +8,7 @@
 #include <time.h>
 
 #include "dl_list.h"
+#include "conditions.h"
 
 static int comparator(const void* a, const void* b);
 static int* generate_arr(unsigned long long size);

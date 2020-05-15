@@ -13,15 +13,15 @@
 #include "pages.h"
 #include "ARC.h"
 #include "colors.h"
-
+#include "conditions.h"
 
 //Creating main memory of MEM_SIZE
 struct page_t* create_fill_mem (size_t size)
 {
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 	struct page_t* mem = (struct page_t*) calloc (size, sizeof(struct page_t));
 	assert(mem && "CreateFillMem");
-	for(int i = 0; i < size; i++)
+	for(unsigned int i = 0; i < size; i++)
 	{
 		mem[i].index = i;
 		for (int j = 0; j < DATA_SIZE; j++)
@@ -53,7 +53,7 @@ void remove_cache(struct cache_t* cache_mem)
 }
 
 //Finding page in memory 
-struct page_t* find_page(int number, struct page_t* mem)
+struct page_t* find_page(long long int number, struct page_t* mem)
 {
 	assert(mem && "Find_P");
 	for(int i = 0; i < MEM_SIZE; i++)
@@ -61,6 +61,7 @@ struct page_t* find_page(int number, struct page_t* mem)
 		if (mem[i].index == number)
 			return mem + i;
 	}
+	exit(404);
 }
 
 //Printing memory
@@ -84,7 +85,7 @@ void print_page(struct page_t* target)
 	color_off();
 	printf("\n");
 	printf("Page requested!\n");
-	printf("Index: %d\n", target -> index);
+	printf("Index: %lld\n", target -> index);
 	printf("Data: ");
 	for (int j = 0; j < DATA_SIZE; j++)
 	{
@@ -98,7 +99,7 @@ void print_page(struct page_t* target)
 }
 
 //Getting page without caching
-void slow_get_page (struct page_t* target, struct page_t* mem, int number)
+void slow_get_page (struct page_t* target, struct page_t* mem, long long int number)
 {
 	assert(mem && "Get_P");
 	assert(target && "Get_P");
@@ -137,14 +138,14 @@ void color_off()
 //Testing function that requests page with random index
 void request(   int mode, 
 				int size,
-				int* p,struct list_t* T1, 
+				unsigned long long * p,struct list_t* T1, 
 				struct list_t* T2, struct list_t* B1, 
 				struct list_t* B2, 
 				struct page_t* mem, 
 				struct cache_t* cache_mem)
 {
 	assert(mem && "Request");
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 	struct page_t* target = (struct page_t*) calloc (1, sizeof(struct page_t));
 	long long int req_n = 0;
 	struct cell* buffer = NULL;
@@ -206,7 +207,7 @@ void my_delay(int millis)
 
 int main()
 {
-	int p = 0; //Param for ARC algorithm
+	unsigned long long p = 0; //Param for ARC algorithm
 
 	#ifdef TIME
 	long int start_t = 0;

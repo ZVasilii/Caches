@@ -9,8 +9,6 @@
 
 struct list_t* make_list() {
     struct list_t* l;
-    struct cell *cur, *creating;
-    unsigned long long i;
     l = (struct list_t*) calloc(1, sizeof (struct list_t));
     assert(l != NULL);
     l->length = 0;

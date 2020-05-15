@@ -5,6 +5,7 @@
 #include "dl_list.h"
 #include "pages.h"
 #include "ARC.h"
+#include "conditions.h"
 
 struct cell {
     struct cell* prev;

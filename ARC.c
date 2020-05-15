@@ -7,21 +7,22 @@
 #include "pages.h"
 #include "dl_list.h"
 #include "ARC.h"
+#include "conditions.h"
 
-int imax (int a, int b)   //simply max
+long long int imax (long long int a, long long int b)   //simply max
 {
 	if (a >=b) return a;
 	else return b;
 }
 
-int imin(int a, int b)	//simply min
+long long int imin(long long int a, long long int b)	//simply min
 {
 	if (a <=b) return a;
 	else return b;
 }
 
 
-void replace(int *p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem)
+void replace(unsigned long long *p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem)
 {
 	struct cell* page_in_B2 = find_list_elem(B2, page_name);
 	if (((T1->length) >=1) && (((page_in_B2 != NULL) && ((T1->length) == (*p))) || ((T1->length) >= (*p))))
@@ -77,11 +78,10 @@ struct cache_t* from_mem_to_cache_mem(long long int page_name, struct page_t* me
 			assert(((cache_mem + i) != NULL) && "Mem to cache");
 			return (cache_mem + i);
 		}
-	if (i == CACHE_SIZE)
-		exit(666);
+	exit(666);
 }
 
-struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem, int* T_hits)			//main function of ARC
+struct cell* fast_get_page(unsigned long long* p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem, int* T_hits)			//main function of ARC
 {		
 	#ifdef DELAY
 	my_delay(CACHE_DELAY);
@@ -142,8 +142,8 @@ struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, s
 	}
 
 
-	int L1_length = (B1->length) + (T1->length);						//L1 and L2 sizes
-	int L2_length = (B2->length) + (T2->length);
+	unsigned long long L1_length = (B1->length) + (T1->length);						//L1 and L2 sizes
+	unsigned long long L2_length = (B2->length) + (T2->length);
 	if (L1_length == CACHE_SIZE)			//case 4.1: L1 is full
 		if (((T1->length)) < CACHE_SIZE)								//if T1 is still not full
 		{																//delete oldest in B1 and change smth(oldest in T1 -> newest in B1)

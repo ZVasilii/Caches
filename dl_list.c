@@ -75,14 +75,14 @@ struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next, struct 
 }
 
 void delete_last_elem(struct list_t* l) {
+    struct cell* c;
     assert(l != NULL);
     assert(l->end != NULL);
+    c = l->end;
     l->end = prev_cell(l->end);
     if(l->end == NULL) {
         l->head = NULL;
     }
-    if(l->end != NULL) {
-        destroy_cell(next_cell(l->end));
-    }
+    destroy_cell(c);
     l->length--;
 }

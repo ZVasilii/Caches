@@ -1,3 +1,9 @@
+int imax(int a, int b) 
+обычная функция max, возвращающая наибольшее
+
+int imin(int a, int b) 
+обычная функция imin, возвращающая наименьшее
+
 void replace(int *p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem)
 p - параметр кеша
 page_name - название страницы
@@ -18,16 +24,17 @@ mem - указатель на память
 cache_mem - указатель на память кеша
 Копирует страницу из памяти в память кеша по заданному названию
 
-struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem)
+struct cell* fast_get_page(int* p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem, int* T_hits)
 Функция кеширования
 p - вспомогательный параметр кеширования
 page_name - название или индекс страницы
 T1, T2, B1, B2 - инициализированные части кеша
 mem - указатель на память
 cache_mem - указатель на память кеша
+T_hits - количество попаданий в кеш
 Выдает указатель на элемент кеша с данным названием(индексом)
 Описание:
 1)Поиск среди закешированных страниц
-1.1)В Т1 и Т2 используется уже закешированная память
-1.2)В B1 и B2 память сначала кешируется из обычной памяти обычным поиском
-2)Если элемент не найден, то запускается обычный поиск по памяти 
+2)При попадании в T1 и T2 происходит лишь перестановка ячеек, увеличение числа попаданий T_hits
+3)При попадании в B1, B2 или промахе происходит перестановка(возможно, удаление элементов), добавление в память кеша и адаптация
+

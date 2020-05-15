@@ -6,6 +6,7 @@
 
 ARC - Adaptive Replacement cache
 Подробнее можете почитать в данной статье:
+
 http://theory.stanford.edu/~megiddo/pdf/IEEE_COMPUTER_0404.pdf
 
 Авторы проекта: Студенты 1 курса ФРТК:

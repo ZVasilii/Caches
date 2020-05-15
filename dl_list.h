@@ -43,6 +43,8 @@ struct cell* find_list_elem(struct list_t* l, long long int name);
 struct cell* insert_to_head(struct list_t* l, struct cell* c);
 struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next, struct cell* c);
 void delete_last_elem(struct list_t* l);
+void print_list(struct list_t* l);
+void print_all_lists(struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2);
 
 
 void list_test();

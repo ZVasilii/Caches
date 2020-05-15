@@ -7,8 +7,8 @@ struct list_t;
 
 enum Size
 {
-    MEM_SIZE = 10,
-    REQ_SIZE = 10,
+    MEM_SIZE = 100,
+    REQ_SIZE = 10000,
     DATA_SIZE = 60,
     CACHE_SIZE = 10,
 

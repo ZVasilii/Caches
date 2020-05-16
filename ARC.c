@@ -39,8 +39,8 @@ void replace(unsigned long long *p,
 			struct list_t* B1, 
 			struct list_t* B2)
 {
-	assert((p >= 0) && (p <= CACHE_SIZE) && "Incorrect parameter p in replace");
-	assert(p, T1 && T2 && B1 && B2 && "Get null pointer in replace");
+	//assert((p >= 0) && (p <= CACHE_SIZE) && "Incorrect parameter p in replace");
+	assert(p && T1 && T2 && B1 && B2 && "Get null pointer in replace");
 	
 
 	//here decision is made due to param p: should program put the oldest of T1 or T2 to the ghost part of cache
@@ -108,6 +108,7 @@ struct cache_t* from_mem_to_cache_mem(long long int page_name, struct page_t* me
 			return (cache_mem + i);
 		}
 	assert((i < CACHE_SIZE) && "No free space in cache_mem");
+	return NULL;
 }
 
 struct cell* fast_get_page(unsigned long long* p, 
@@ -163,7 +164,7 @@ struct cell* fast_get_page(unsigned long long* p,
 		and place it into the cache
 		*/
 		*p = imin(CACHE_SIZE, *p + imax((B2->length) / (B1->length), 1));
-		replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
+		replace(p, page_name, T1, T2, B1, B2);
 		struct cell* T2_head = replace_lf_to_head(B1, T2, page_in_B1);
 		assert((T2_head == T2->head) && "Case 2, insert in head");
 		struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
@@ -184,7 +185,7 @@ struct cell* fast_get_page(unsigned long long* p,
 		and place it into the cache
 		*/
 		*p = imax(0, *p - imax((B1->length) / (B2->length), 1));
-		replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
+		replace(p, page_name, T1, T2, B1, B2);
 		struct cell* T2_head = replace_lf_to_head(B2, T2, page_in_B2);
 		assert((T2_head == T2->head) && "Case 3, insert in head");
 		struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
@@ -208,7 +209,7 @@ struct cell* fast_get_page(unsigned long long* p,
 			replace smth using <replace>
 			*/
 			delete_last_elem(B1);
-			replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
+			replace(p, page_name, T1, T2, B1, B2);
 		}
 		else											
 			{												//if T1 if full			
@@ -232,7 +233,7 @@ struct cell* fast_get_page(unsigned long long* p,
 		if ((L1_length + L2_length) == (2 * CACHE_SIZE))
 			delete_last_elem(B2);
 
-		replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
+		replace(p, page_name, T1, T2, B1, B2);
 		}
 	/*
 	put new page at the top of T1

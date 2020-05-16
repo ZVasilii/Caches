@@ -24,8 +24,8 @@ enum Mode
 
 enum Delays
 {
-	MEM_DELAY = 100,
-	CACHE_DELAY = 10,
+	MEM_DELAY = 1,
+	CACHE_DELAY = 1,
 };
 
 ///Page structure

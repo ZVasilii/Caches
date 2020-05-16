@@ -6,7 +6,7 @@
 #include "pages.h"
 #include "dl_list.h"
 #include "ARC.h"
-#include "conditions.h"
+//#include "conditions.h"
 
 
 
@@ -44,6 +44,7 @@ void replace(unsigned long long *p, long long int page_name, struct list_t* T1, 
 {
 	assert((p!= NULL) && (*p <= cachesize) && "Incorrect parameter p in replace");
 	assert((p!= NULL) && (T1!= NULL) &&  (T2!= NULL) &&  (B1!= NULL) && (B2!= NULL) && "Get null pointer in replace");
+
 	
 
 	//here decision is made due to param p: should program put the oldest of T1 or T2 to the ghost part of cache
@@ -112,7 +113,9 @@ struct cache_t* from_mem_to_cache_mem(long long int page_name, struct page_t* me
 			assert(((cache_mem + i) != NULL) && "Mem to cache");
 			return (cache_mem + i);
 		}
+
 	assert((i < cachesize) && "No free space in cache_mem");
+
 	return NULL;
 }
 
@@ -172,9 +175,11 @@ struct cell* fast_get_page( unsigned long long* p,
 		and place it into the cache
 		*/
 
+
 		*p = imin(cachesize, *p + imax((B2->length) / (B1->length), 1));
 		replace(p, page_name, T1, T2, B1, B2);
 		replace_lf_to_head(B1, T2, page_in_B1);
+
 		struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
 		assert(temp && "Case 2, copy to cache_mem");
 		set_cache(T2->head, temp);
@@ -194,10 +199,9 @@ struct cell* fast_get_page( unsigned long long* p,
 		*/
 		*p = imax(0, *p - imax((B1->length) / (B2->length), 1));
 
+
 		replace(p, page_name, T1, T2, B1, B2);
 		replace_lf_to_head(B2, T2, page_in_B2);
-
-
 		struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
 		assert(temp && "Case 3, copy to cache_mem");
 		set_cache(T2->head, temp);

@@ -10,7 +10,7 @@
 #include "pages.h"
 #include "ARC.h"
 #include "colors.h"
-#include "conditions.h"
+//#include "conditions.h"
 
 
 size_t cachesize = 0;  ///Size of cache
@@ -146,6 +146,7 @@ void color_off()
 {
 	printf(RES);
 }
+
 
 
 //Testing function that requests page with random index

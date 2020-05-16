@@ -9,7 +9,7 @@
 //creating dl_list without any cells
 struct list_t* make_list() {
     struct list_t* l;
-    l = (struct list_t*) calloc(1, sizeof (struct list_t));
+    l = (struct list_t*)calloc(1, sizeof (struct list_t));
     if(l == NULL) {
         return NULL;
     }

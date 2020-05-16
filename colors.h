@@ -20,15 +20,15 @@ const char WHITE[] = "\033[1;37m";
 
 #ifndef COLORS
 
-const char RES[] = "";
-const char RED[] = "";
-const char GREEN[] = "";
-const char BLUE[] = "";
-const char YELLOW[] = "";
-const char BLACK[] = "";
-const char MAGENTA[] = "";
-const char CYAN[] = "";
-const char WHITE[] = "";
+const char RES[] = " ";
+const char RED[] = " ";
+const char GREEN[] = " ";
+const char BLUE[] = " ";
+const char YELLOW[] = " ";
+const char BLACK[] = " ";
+const char MAGENTA[] = " ";
+const char CYAN[] = " ";
+const char WHITE[] = " ";
 
 
 #endif

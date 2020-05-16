@@ -1,6 +1,3 @@
-#define DTIME
-#define DDELAY 
-#define DPRINT 
 
 #include <time.h>
 #include <stdlib.h>
@@ -15,6 +12,8 @@
 #include "colors.h"
 #include "conditions.h"
 
+
+size_t cachesize = 0;  ///Size of cache
 
 //Creating main memory of MEM_SIZE
 struct page_t* create_fill_mem (size_t size)
@@ -80,6 +79,7 @@ void print_mem(struct page_t* mem)
 	}
 
 }
+
 
 
 //Printing requested page
@@ -179,7 +179,7 @@ void request(   int mode,
 
 	if (mode == FAST)
 	{
-		int T_hits = 0;
+		long long int T_hits = 0;
 		for (int i = 0; i < size; i++)
 		{
 			req_n = rand() % MEM_SIZE;
@@ -201,7 +201,7 @@ void request(   int mode,
 		}
 		color_on(MAGENTA);
 		printf("Number of requests: %d\n", size);
-		printf("Number of hits: %d\n", T_hits);
+		printf("Number of hits: %lld\n", T_hits);
 		printf("Hit ratio %lg percents\n", (double) T_hits/ (double) size * 100);
 		color_off();
 	}
@@ -219,10 +219,60 @@ void my_delay(int millis)
     {}
 }
 
+void contest_testing(unsigned long long * p,
+					struct list_t* T1, 
+					struct list_t* T2, 
+					struct list_t* B1, 
+					struct list_t* B2, 
+					struct page_t* mem, 
+					struct cache_t* cache_mem,
+					FILE* inp)
+{
+	long long int page_n;
+	long long int T_hits = 0;
+	long long int req_qt = 0;
+
+	while (fscanf(inp, "%lld", &page_n) == 1)
+	{
+		fast_get_page(p, page_n, T1, T2, B1, B2, mem, cache_mem, &T_hits);
+		req_qt++;
+	}
+	printf("Number of requests: %lld\n", req_qt);
+	printf("Number of hits: %lld\n", T_hits);
+	printf("Hit ratio %lg percents\n", (double) T_hits/ (double) req_qt * 100);
+	
+}
+
+
 ///General function
 int main()
 {
+	///FILE* inp = fopen("input.txt", "rb+");
+
+
+	#ifdef CONTEST 
+	fscanf(stdin , "%lu", &cachesize);
+	#endif
+
+	#ifndef CONTEST 
+	cachesize = CACHE_SIZE;
+	#endif
+
+
+
+	
 	unsigned long long p = 0; //Param for ARC algorithm
+
+	///Initializing
+	struct page_t*  mem = create_fill_mem(MEM_SIZE);
+	struct cache_t* cache_mem = create_fill_cache(cachesize);
+	struct list_t* T1 = make_list();
+	struct list_t* T2 = make_list();
+	struct list_t* B1 = make_list();
+	struct list_t* B2 = make_list();
+
+	assert((mem != NULL) && (cache_mem!= NULL) && (T1!= NULL) && (T2!= NULL) && (B1!= NULL) && (B2!= NULL));
+
 
 	#ifdef TIME
 	long int start_t = 0;
@@ -231,25 +281,22 @@ int main()
 	double fast_t = 0.0;
 	#endif
 
-	///Initializing
-	struct page_t*  mem = create_fill_mem(MEM_SIZE);
-	struct cache_t* cache_mem = create_fill_cache(CACHE_SIZE);
-	struct list_t* T1 = make_list();
-	struct list_t* T2 = make_list();
-	struct list_t* B1 = make_list();
-	struct list_t* B2 = make_list();
-
-	assert(mem != NULL);
-
 	#ifdef TIME
 	start_t = clock();
 	#endif
 
+	#ifdef CONTEST 
+	contest_testing(&p, T1, T2, B1, B2, mem, cache_mem, stdin);
+	#endif
+
+
+	#ifndef CONTEST
 	///Slow requesting, without cache
 	color_on(RED);
 	printf("Request from memory\n");
 	color_off();
 	request(SLOW, REQ_SIZE, &p, T1, T2, B1, B2, mem, cache_mem);
+	#endif
 
 	#ifdef TIME
 	end_t = clock();
@@ -260,12 +307,13 @@ int main()
 	start_t = clock();
 	#endif
 
+	#ifndef CONTEST
 	///Fast requesting, using ARC
 	color_on(RED);
 	printf("Request from cache\n");
 	color_off();
-
 	request(FAST, REQ_SIZE, &p, T1, T2, B1, B2, mem, cache_mem);
+	#endif
 	
 	///Timing functions
 	#ifdef TIME
@@ -278,6 +326,7 @@ int main()
 	#endif
 
 
+
 	///Wanna see some statistics????
 	#ifdef STATS
 
@@ -285,7 +334,7 @@ int main()
 	printf("**********************\n");
 	printf("STATS:\n");
 	printf("Memory size = %d\n", MEM_SIZE);
-	printf("Cache size = %d\n", CACHE_SIZE);
+	printf("Cache size = %lu\n", cachesize);
 	printf("Memory delay = %d millis\n", MEM_DELAY);
 	printf("Cache delay  = %d millis\n", CACHE_DELAY);
 	printf("Number of requests = %d\n", REQ_SIZE);
@@ -297,6 +346,7 @@ int main()
 
 	///Always clear the memory after yourself!
 	clear_everything(mem, cache_mem, T1, T2, B1, B2);
+	///fclose(inp);
 
 	return 0;
 }

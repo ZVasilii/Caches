@@ -56,4 +56,14 @@ struct page_t* find_page(long long int number, struct page_t* mem);
 void clear_everything(struct page_t* mem, struct cache_t* cache, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2);
 
 void my_delay(int millis);
+void color_on(const char* str);
+void color_off();
 
+void contest_testing(unsigned long long * p,
+					struct list_t* T1, 
+					struct list_t* T2, 
+					struct list_t* B1, 
+					struct list_t* B2, 
+					struct page_t* mem, 
+					struct cache_t* cache_mem,
+					FILE* inp);

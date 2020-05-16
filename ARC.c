@@ -9,6 +9,9 @@
 #include "ARC.h"
 #include "conditions.h"
 
+
+extern size_t cachesize;
+
 long long int imax (long long int a, long long int b)   //simply max
 {
 	if (a >=b) return a;
@@ -22,7 +25,7 @@ long long int imin(long long int a, long long int b)	//simply min
 }
 
 
-void replace(unsigned long long *p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem)
+void replace(unsigned long long *p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2)
 {
 	struct cell* page_in_B2 = find_list_elem(B2, page_name);
 	if (((T1->length) >=1) && (((page_in_B2 != NULL) && ((T1->length) == (*p))) || ((T1->length) >= (*p))))
@@ -69,7 +72,7 @@ struct cache_t* from_mem_to_cache_mem(long long int page_name, struct page_t* me
 	int i = 0;
 	struct page_t* page_in_mem = find_page(page_name, mem);   //pointer on page in mem with this page_name
 	assert(page_in_mem && "No such page in memory");
-	for (i = 0; i < CACHE_SIZE; i++)				//trying to find free space in cache_mem
+	for (i = 0; i < cachesize; i++)				//trying to find free space in cache_mem
 		if (cache_mem[i].flag == 0)
 		{
 			//if we found, place there new page by copying it from memory
@@ -81,7 +84,7 @@ struct cache_t* from_mem_to_cache_mem(long long int page_name, struct page_t* me
 	exit(666);
 }
 
-struct cell* fast_get_page(unsigned long long* p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem, int* T_hits)			//main function of ARC
+struct cell* fast_get_page(unsigned long long* p, long long int page_name, struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2, struct page_t* mem, struct cache_t* cache_mem, long long int* T_hits)			//main function of ARC
 {		
 	#ifdef DELAY
 	my_delay(CACHE_DELAY);
@@ -113,8 +116,8 @@ struct cell* fast_get_page(unsigned long long* p, long long int page_name, struc
 		move x to the top of T2
 		place x into the cache
 		*/
-		*p = imin(CACHE_SIZE, *p + imax((B2->length) / (B1->length), 1));
-		replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
+		*p = imin(cachesize, *p + imax((B2->length) / (B1->length), 1));
+		replace(p, page_name, T1, T2, B1, B2);
 		replace_lf_to_head(B1, T2, page_in_B1);
 		struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
 		assert(temp != NULL && "Page B1");
@@ -133,7 +136,7 @@ struct cell* fast_get_page(unsigned long long* p, long long int page_name, struc
 		place x into the cache
 		*/
 		*p = imax(0, *p - imax((B1->length) / (B2->length), 1));
-		replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
+		replace(p, page_name, T1, T2, B1, B2);
 		replace_lf_to_head(B2, T2, page_in_B2);
 		struct cache_t* temp = from_mem_to_cache_mem(page_name, mem, cache_mem);
 		assert(temp != NULL && "Page B2");
@@ -144,15 +147,15 @@ struct cell* fast_get_page(unsigned long long* p, long long int page_name, struc
 
 	unsigned long long L1_length = (B1->length) + (T1->length);						//L1 and L2 sizes
 	unsigned long long L2_length = (B2->length) + (T2->length);
-	if (L1_length == CACHE_SIZE)			//case 4.1: L1 is full
-		if (((T1->length)) < CACHE_SIZE)								//if T1 is still not full
+	if (L1_length == cachesize)			//case 4.1: L1 is full
+		if (((T1->length)) < cachesize)								//if T1 is still not full
 		{																//delete oldest in B1 and change smth(oldest in T1 -> newest in B1)
 			/*
 			delete LRU page of B1
 			replace(p)
 			*/
 			delete_last_elem(B1);
-			replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
+			replace(p, page_name, T1, T2, B1, B2);
 		}
 		else															//if T1 if full
 			{															//delete oldest in T1 and delete its mem
@@ -164,18 +167,18 @@ struct cell* fast_get_page(unsigned long long* p, long long int page_name, struc
 			temp->flag = 0;
 			delete_last_elem(T1);
 		}			
-	else if ((L1_length < CACHE_SIZE) && ((L1_length + L2_length) >= CACHE_SIZE))		//case 4.2: if L1 is not full, but together L1+L2 more than cache_size
-	{																	//if L1+L2 full exactly (= 2*cache_size), delete oldest in B2
+	else if ((L1_length < cachesize) && ((L1_length + L2_length) >= cachesize))		//case 4.2: if L1 is not full, but together L1+L2 more than cachesize
+	{																	//if L1+L2 full exactly (= 2*cachesize), delete oldest in B2
 																		//but ALWAYS change smth
 		/*
 		if ()
 			delete the LRU page of B2
 		replace(p)
 		*/
-		if ((L1_length + L2_length) == (2 * CACHE_SIZE))
+		if ((L1_length + L2_length) == (2 * cachesize))
 			delete_last_elem(B2);
 
-		replace(p, page_name, T1, T2, B1, B2, mem, cache_mem);
+		replace(p, page_name, T1, T2, B1, B2);
 		}
 	/*
 	put x at the top of T1

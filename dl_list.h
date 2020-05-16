@@ -1,8 +1,13 @@
-//This header unites all, that need for using doubly linked list
-// 
+/*
+INFORMATION
+**************
+Header that unites all, that need for using doubly linked list
+*/
+
 //struct cell - cell of the dl_list
 //you can work with it only using functions from dl_cells.h
 //struct cache_t - only for using pointers on it
+//
 //struct list_t - shell for dl_list
 //head - the first element of the list (no element - NULL)
 //end - the last element of the list (no element - NULL)
@@ -10,6 +15,7 @@
 //end and length exists only for convenience and more fast working
 //
 //functions in header are separated on blocks
+//
 //first block: for cells
 //second block: for list_t
 //third block: tests 

@@ -1,3 +1,11 @@
+/*
+INFORMATION
+****************************
+Header for Sergey's MS Visual Studio
+*/
+
+
+/*
 #pragma once
 
 #define TIME 1
@@ -6,3 +14,4 @@
 #define COLORS 0
 #define STATS 1
 #define PRINT_REQ 1
+*/

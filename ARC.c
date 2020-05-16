@@ -1,3 +1,19 @@
+/*
+INFORMATION
+*************************************************
+This file contains ARC Algorithm itelf
+
+imax - function of finding max long long int element from given two
+imin - function of finding min long long int element from given two
+replace - function of replacing elements in cache due to some conditions (mostly due to parameter p and cache sizes)
+insert_in_head - function insert new cell in given part of cache with given cache_mem pointer and page_name
+from_mem_to_cache_mem - copying page with given page_name from memory to cache_memory
+fast_get_page - main function of ARC, it uses ARC algorithm to cache given page 
+*/
+
+
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -6,22 +22,12 @@
 #include "pages.h"
 #include "dl_list.h"
 #include "ARC.h"
-//#include "conditions.h"
+#include "conditions.h"
 
 
 
-extern size_t cachesize;
+extern size_t cachesize; //From function main_test.c
 
-
-/*
-Small Instruction:
-imax - function of finding max long long int element from given two
-imin - function of finding min long long int element from given two
-replace - function of replacing elements in cache due to some conditions (mostly due to parameter p and cache sizes
-insert_in_head - function insert new cell in given part of cache with given cache_mem pointer and page_name
-from_mem_to_cache_mem - copying page with given page_name from memory to cache_memory
-fast_get_page - main function of ARC, it uses ARC algorithm to cache given page 
-*/
 
 long long int imax (long long int a, long long int b)   
 

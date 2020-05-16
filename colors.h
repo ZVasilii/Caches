@@ -1,8 +1,13 @@
+/*
+INFORMATION
+**************
+Header with colors of text in the console
+Used with functions color_on(color) and color_off
+*/
+
+
 #pragma once 
 
-
-///Colors of text in the console
-///Use functions color_on(color) and color_off
 #ifdef COLORS
 
 const char RES[] = "\033[0m";

@@ -1,3 +1,10 @@
+/*
+INFORMATION
+****************************
+Functions for providing work of the
+double-linked list 
+*/
+
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>

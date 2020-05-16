@@ -1,3 +1,35 @@
+/*
+Welcome to our project!
+
+The goal of our project: implementing one of the caching strategies - ARC
+
+ARC - Adaptive Replacement Cache 
+You can read more in this article:
+http://theory.stanford.edu/~megiddo/pdf/IEEE_COMPUTER_0404.pdf
+
+Authors of the project: 1st year students of FRTK:
+
+	Alexander Latikov
+	Sergey Koshelev
+	Zaitsev Vasilii
+
+Development Date: May 2020
+
+A brief overview of the files included in our project:
+
+	dl_list.h and dl_list.c - functions and auxiliary structures for the "List" structure
+	dl_list_test.c - Testing system for a List
+	dl_cells.c - functions and auxiliary structures for the "List cell" structure
+	ARC.c and ARC.h - Main ARC Cache Emulation Algorithm
+	pages.h - Header with constants and basic structures
+	main_test.c - Testing system, user interface, data output for analysis <You are here>
+	ARC_readme.txt - more about what is happening in ARC
+	dl_list_readme.txt - more on how to use the dl_list functions
+	colors.h - Header with materials for changing the color of text in the console
+
+LICENSE - GNU GENERAL PUBLIC LICENSE
+*/
+
 
 #include <time.h>
 #include <stdlib.h>
@@ -10,7 +42,7 @@
 #include "pages.h"
 #include "ARC.h"
 #include "colors.h"
-//#include "conditions.h"
+#include "conditions.h"
 
 
 size_t cachesize = 0;  ///Size of cache
@@ -106,7 +138,7 @@ void print_page(struct page_t* target)
 }
 
 
-//Getting page without caching
+//Getting page,  bypassing the cache, directly from memory
 void slow_get_page (struct page_t* target, struct page_t* mem, long long int number)
 {
 	assert(mem && "Get_P");
@@ -220,6 +252,7 @@ void my_delay(int millis)
     {}
 }
 
+///Testing functions for contest mode
 void contest_testing(unsigned long long * p,
 					struct list_t* T1, 
 					struct list_t* T2, 
@@ -248,9 +281,9 @@ void contest_testing(unsigned long long * p,
 ///General function
 int main()
 {
-	///FILE* inp = fopen("input.txt", "rb+");
+	
 
-
+	///Initializing the size of the cache
 	#ifdef CONTEST 
 	fscanf(stdin , "%lu", &cachesize);
 	#endif
@@ -264,7 +297,7 @@ int main()
 	
 	unsigned long long p = 0; //Param for ARC algorithm
 
-	///Initializing
+	///Initializing main structures
 	struct page_t*  mem = create_fill_mem(MEM_SIZE);
 	struct cache_t* cache_mem = create_fill_cache(cachesize);
 	struct list_t* T1 = make_list();
@@ -274,7 +307,7 @@ int main()
 
 	assert((mem != NULL) && (cache_mem!= NULL) && (T1!= NULL) && (T2!= NULL) && (B1!= NULL) && (B2!= NULL));
 
-
+	///Initializing parametrs for time-counting functions
 	#ifdef TIME
 	long int start_t = 0;
 	long int end_t = 0;
@@ -286,11 +319,12 @@ int main()
 	start_t = clock();
 	#endif
 
+	///Testing in contest mode
 	#ifdef CONTEST 
 	contest_testing(&p, T1, T2, B1, B2, mem, cache_mem, stdin);
 	#endif
 
-
+	///"Canonical" mode of the programm
 	#ifndef CONTEST
 	///Slow requesting, without cache
 	color_on(RED);
@@ -316,7 +350,7 @@ int main()
 	request(FAST, REQ_SIZE, &p, T1, T2, B1, B2, mem, cache_mem);
 	#endif
 	
-	///Timing functions
+	///Time-counting functions
 	#ifdef TIME
 	end_t = clock();
 	color_on(RED);
@@ -347,7 +381,6 @@ int main()
 
 	///Always clear the memory after yourself!
 	clear_everything(mem, cache_mem, T1, T2, B1, B2);
-	///fclose(inp);
 
 	return 0;
 }

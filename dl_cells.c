@@ -1,4 +1,9 @@
-//This file provides work with cells of the doubly linked list
+/*
+INFORMATION
+****************************
+Functions for providing work of the
+double-linked list with cells
+*/
 
 #include <stdlib.h>
 #include <stdio.h>

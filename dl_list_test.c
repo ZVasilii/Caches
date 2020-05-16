@@ -1,4 +1,12 @@
+/*
+INFORMATION
+****************************
+Functions for testing struct list
+*/
+
+
 #ifdef LIST_TEST
+
 #include <assert.h>
 #include <stdio.h>
 

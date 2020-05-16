@@ -1,118 +1,80 @@
-
 #ifdef LIST_TEST
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <assert.h>
-#include <time.h>
+#include <stdio.h>
 
 #include "dl_list.h"
-#include "conditions.h"
 
-static int comparator(const void* a, const void* b);
-static int* generate_arr(unsigned long long size);
-static void ins_sort(int* arr, unsigned long long size, int (*comp) (const void*, const void*));
-static struct cell* make_arr_l(int* arr, unsigned long long size);
-static void rewrite(int* arr, struct cell* arr_l, unsigned long long size);
+static struct list_t* fill_list_with_cells(struct list_t* l, int n);
+static void reverse_cells(struct list_t* l, struct list_t* m, int n);
+static void delete_cells(struct list_t* l, int n);
 
-void list_test() {
-    unsigned long long size = 10000;
-    int *arr, *arr_copy;
-    arr = generate_arr(size);
-    arr_copy = (int*) calloc(size, sizeof (int));
-    assert(arr_copy != NULL);
-    memcpy(arr_copy, arr, size * sizeof (int));
-    qsort(arr, size, sizeof (int), comparator);
-    ins_sort(arr_copy, size, comparator);
-    assert(memcmp(arr, arr_copy, size * sizeof (int)) == 0);
-    free(arr_copy);
-    free(arr);
-    printf("test complete");
+void dl_list_test() {
+    const int n = 10000;
+    struct list_t *l, *m;
+    l = make_list();
+    assert(l != NULL);
+    l = fill_list_with_cells(l, n);
+    printf("dl_list test level 1 complete\n");
+    m = make_list();
+    assert(m != NULL);
+    reverse_cells(l, m, n);
+    printf("dl_list test level 2 complete\n");
+    delete_cells(m, n);
+    destroy_list(l);
+    destroy_list(m);
+    printf("dl_list test level 3 complete\n");
+    printf("dl_list test complete\n");
 }
 
-static int comparator(const void* a, const void* b) {
-    const int *x = (const int*) a;
-    const int *y = (const int*) b;
-    return *x - *y;
-}
-
-static int* generate_arr(unsigned long long size) {
-    int* arr;
-    unsigned long long i;
-    arr = (int*) calloc(size, sizeof (int));
-    assert(arr != NULL);
-    srand(time(NULL));
-    for(i = 0; i < size; i++) {
-        arr[i] = rand() % 1000000;
+static struct list_t* fill_list_with_cells(struct list_t* l, int n) {
+    int i;
+    struct cell* c;
+    assert(l != NULL);
+    for(i = 0; i < n; i++) {
+        c = make_cell_n((long long int) i);
+        insert_to_head(l, c);
     }
-    return arr;
-}
-
-static void ins_sort(int* arr, unsigned long long size, int (*comp) (const void*, const void*)) {
-    struct cell* arr_l, *n, *i, *buff;
-    int x, y;
-    assert(arr != NULL);
-
-    arr_l = make_arr_l(arr, size);
-
-    n = arr_l;
-    do {
-        n = next_cell(n);
-        i = prev_cell(n);
-        x = (int) cell_name(n);
-        while(i != NULL) {
-            y = (int) cell_name(i);
-            if(comp(&y, &x) <= 0) {
-                buff = prev_cell(n);
-                place_cell_after(n, i);
-                if(buff != i) {
-                    n = buff;
-                }
-                break;
-            }
-            i = prev_cell(i);
-        }
-        if(i == NULL) {
-            buff = prev_cell(n);
-            arr_l = place_cell_before(n, arr_l);
-            n = buff;
-        }
-    } while(is_last(n) == 0);
-
-    rewrite(arr, arr_l, size);
-    destroy_all_cells(arr_l);
-}
-
-static struct cell* make_arr_l(int* arr, unsigned long long size) {
-    struct cell *first, *cur, *last;
-    unsigned long long i;
-    assert(size > 0);
-    assert(arr != NULL);
-
-    first = make_cell_n((long long) arr[0]);
-    assert(first != NULL);
-    last = first;
-    for(i = 1; i < size; i++) {
-        cur = make_cell_n((long long) arr[i]);
-        place_cell_after(cur, last);
-        last = cur;
+    assert(l->length == (unsigned long long) n);
+    c = l->head;
+    for(i = 0; i < n - 1; i++) {
+        assert(c != NULL);
+        assert(cell_name(c) - 1 == cell_name(next_cell(c)));
+        c = next_cell(c);
     }
-    return first;
+    assert(c == l->end);
+    return l;
 }
 
-static void rewrite(int* arr, struct cell* arr_l,  unsigned long long size) {
-    unsigned long long i;
-    struct cell* cur;
-    assert(arr != NULL);
-    assert(arr_l != NULL);
-    assert(size == cell_num(arr_l));
-    cur = arr_l;
-    for(i = 0; i < size; i++) {
-        assert(cur != NULL);
-        arr[i] = (int) cell_name(cur);
-        cur = next_cell(cur);
+static void reverse_cells(struct list_t* l, struct list_t* m, int n) {
+    int i;
+    struct cell* c;
+    assert(l != NULL);
+    assert(m != NULL);
+    while(l->length != 0) {
+        replace_lf_to_head(l, m, l->head);
     }
+    assert(m->length == (unsigned long long) n);
+    c = m->head;
+    for(i = 0; i < n - 1; i++) {
+        assert(c != NULL);
+        assert(cell_name(c) + 1 == cell_name(next_cell(c)));
+        c = next_cell(c);
+    }
+    assert(c == m->end);
 }
 
+static void delete_cells(struct list_t* l, int n) {
+    assert(l != NULL);
+    assert(l->length == (unsigned long long) n);
+    while(n != 0) {
+        assert(l->head != NULL);
+        assert(l->end != NULL);
+        assert(l->length > 0);
+        delete_last_elem(l);
+        n--;
+    }
+    assert(l->length == 0);
+    assert(l->head == NULL);
+    assert(l->end == NULL);
+}
 #endif

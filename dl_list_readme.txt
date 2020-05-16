@@ -1,8 +1,8 @@
 Это инструкция по использованию двусвязного списка.
 
-Внутренние файлы списка: dl_list.c, dl_cells.c
+Внутренние файлы списка: dl_list.c, dl_cells.c, dl_cell_test, dl_list_test
 
-Заголовочный файл: dl_list.h, pages.h
+Заголовочный файл: dl_list.h
 
 
 
@@ -28,6 +28,10 @@ struct cell* make_cell_p(long long int name, struct cache_t* cache_ptr)
 Создает ячейку с заданным указателем.
 struct cell* make_cell_np(long long int name, struct cache_t* cache_ptr)
 Создает ячейку с заданным именем и указателем.
+
+Извлечение ячейки:
+struct cell* extract_cell(struct cell* c);
+Извлекает ячейку из списка, стирает все ее связи. Дыры в списке затягиваются.
 
 Уничтожение ячейки: 
 void destroy_cell(struct cell* c) 
@@ -102,7 +106,15 @@ Cur и next могут быть как разными, так и одним и тем же списком.
 Удаляет последний элемент списка.
 void delete_last_elem(struct list_t* l)
 
+
+Тесты находятся под условной компиляцией:
+
+Тестирование работоспособности ячеек списка:
+void dl_cell_test()
+Для включения: определить CELL_TEST
+
 Тестирование работоспособности списка:
-void list_test()
+void dl_list_test()
 Сделано при помощи реализации сортировки вставками.
+Для включения: определить LIST_TEST
 

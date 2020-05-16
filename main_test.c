@@ -153,14 +153,15 @@ void slow_get_page (struct page_t* target, struct page_t* mem, long long int num
 
 ///CLEAR EVERYTHING!!!
 void clear_everything(  struct page_t*  mem,
-				    	struct cache_t* cache,
+				    	struct cache_t* cache_mem,
 						struct list_t* T1,
 						struct list_t* T2,
 						struct list_t* B1,
 						struct list_t* B2)
 {
+	assert((mem != NULL) && (cache_mem!= NULL) && (T1!= NULL) && (T2!= NULL) && (B1!= NULL) && (B2!= NULL) && "Clearing");
 	remove_mem(mem);
-	remove_cache(cache);
+	remove_cache(cache_mem);
 	destroy_list(T1);
 	destroy_list(T2);
 	destroy_list(B1);
@@ -190,7 +191,8 @@ void request(   int mode,
 				struct page_t* mem, 
 				struct cache_t* cache_mem)
 {
-	assert(mem && "Request");
+
+	assert((mode == SLOW) && (mode == FAST) && (mem != NULL) && (cache_mem!= NULL) && (T1!= NULL) && (T2!= NULL) && (B1!= NULL) && (B2!= NULL) && "Request");
 	srand((unsigned int)time(NULL));
 	struct page_t* target = (struct page_t*) calloc (1, sizeof(struct page_t));
 	long long int req_n = 0;
@@ -262,6 +264,8 @@ void contest_testing(unsigned long long * p,
 					struct cache_t* cache_mem,
 					FILE* inp)
 {
+	assert((mem != NULL) && (cache_mem!= NULL) && (T1!= NULL) && (T2!= NULL) && (B1!= NULL) && (B2!= NULL) && (p!= NULL) && (inp!= NULL) && "Contset testing");
+
 	long long int page_n;
 	long long int T_hits = 0;
 	long long int req_qt = 0;

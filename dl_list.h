@@ -1,3 +1,19 @@
+//This header unites all, that need for using doubly linked list
+// 
+//struct cell - cell of the dl_list
+//you can work with it only using functions from dl_cells.h
+//struct cache_t - only for using pointers on it
+//struct list_t - shell for dl_list
+//head - the first element of the list (no element - NULL)
+//end - the last element of the list (no element - NULL)
+//length - number of the list elements
+//end and length exists only for convenience and more fast working
+//
+//functions in header are separated on blocks
+//first block: for cells
+//second block: for list_t
+//third block: tests 
+
 #pragma once
 
 
@@ -13,7 +29,7 @@ struct list_t {
     struct cell* end;
 };
 
-
+//first block of functions
 struct cell* make_cell();
 struct cell* make_cell_n(long long int name);
 struct cell* make_cell_p(struct cache_t* new_page);
@@ -35,6 +51,7 @@ int is_first(struct cell* c);
 int is_last(struct cell* c);
 
 
+//second block of functions
 struct list_t* make_list();
 void destroy_list(struct list_t* l);
 struct cell* find_list_elem(struct list_t* l, long long int name);
@@ -45,5 +62,7 @@ void print_list(struct list_t* l);
 void print_all_lists(struct list_t* T1, struct list_t* T2, struct list_t* B1, struct list_t* B2);
 
 
+//third block of functions
+//this functions under conditional compilation (watch readme)
 void dl_cell_test();
 void dl_list_test();

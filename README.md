@@ -46,6 +46,7 @@ http://theory.stanford.edu/~megiddo/pdf/IEEE_COMPUTER_0404.pdf
 
 Использование: Исполните комманду make <option>
 options:
+	
 	contest - Для тестирования в контестном режиме (HW8)
 	min - Вывод без печати страниц
 	normal - Вывод в "каноничном" виде

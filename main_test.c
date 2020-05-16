@@ -192,7 +192,7 @@ void request(   int mode,
 				struct cache_t* cache_mem)
 {
 
-	assert((mode == SLOW) && (mode == FAST) && (mem != NULL) && (cache_mem!= NULL) && (T1!= NULL) && (T2!= NULL) && (B1!= NULL) && (B2!= NULL) && "Request");
+	assert(((mode == SLOW) || (mode == FAST)) && (mem != NULL) && (cache_mem!= NULL) && (T1!= NULL) && (T2!= NULL) && (B1!= NULL) && (B2!= NULL) && "Request");
 	srand((unsigned int)time(NULL));
 	struct page_t* target = (struct page_t*) calloc (1, sizeof(struct page_t));
 	long long int req_n = 0;

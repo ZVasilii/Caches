@@ -14,6 +14,8 @@
 #	-DPRINT_REQ - Adds printing of auxiliary/debugging information when caching (List contents, CACHE MISS indicator)
 #	-DSTATS - Adds printing of constant state information for further analysis
 #	-DCOLORS - Colorizes boring life in bright colors (Works on Linux only)
+#	-DCELL_TEST - Adds function dl_cell_test();
+#	-DLIST_TEST - Adds function dl_list_test();
 
 
 min:
@@ -27,4 +29,3 @@ contest:
 
 normal:
 	gcc  main_test.c dl_cells.c dl_list.c ARC.c -DDELAY -DTIME -DPRINT -DCOLORS -DSTATS  -o TEST
-

@@ -70,5 +70,9 @@ void print_all_lists(struct list_t* T1, struct list_t* T2, struct list_t* B1, st
 
 //third block of functions
 //this functions under conditional compilation (watch readme)
+#ifdef CELL_TEST
 void dl_cell_test();
+#endif
+#ifdef LIST_TEST
 void dl_list_test();
+#endif

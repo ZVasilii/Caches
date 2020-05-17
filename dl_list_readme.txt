@@ -78,7 +78,6 @@ struct list_t {
     struct cell* head;
     unsigned long long length;
     struct cell* end;
-    struct cell* last_found;
 };
 
 Функции для работы со списком:
@@ -92,16 +91,15 @@ void destroy_list(struct list_t* l)
 
 Поиск элемента списка по названию.
 struct cell* find_list_elem(struct list_t* l, long long int name)
-Найденный элемент возвращается функцией и записывается в last_found.
+Найденный элемент возвращается функцией.
 
 Вставка элемента в начало списка
 struct cell* insert_to_head(struct list_t* l, struct cell* c)
 
 Перестановка элемента 
-struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next, struct cell* c)
-Переставляет last found элемент cur в начало next при с = NULL. 
+struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next, struct cell* c) 
 Cur и next могут быть как разными, так и одним и тем же списком.
-Если с != NULL, то переставляет его в начало next. Если с не принадлежит cur, то вам будет очень плохо.
+Если с не принадлежит cur, то вам будет очень плохо =)
 
 Удаляет последний элемент списка.
 void delete_last_elem(struct list_t* l)

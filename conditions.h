@@ -14,4 +14,6 @@ Header for Sergey's MS Visual Studio
 #define COLORS 0
 #define STATS 1
 #define PRINT_REQ 1
+#define LIST_TEST 1
+#define CELL_TEST 1
 */

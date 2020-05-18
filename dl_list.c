@@ -58,6 +58,8 @@ struct cell* insert_to_head(struct list_t* l, struct cell* c) {
     return c;
 }
 
+//replace c from cur to head of next
+//c should be from cur or list will be crush!!!
 struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next, struct cell* c) {
     assert((cur != NULL) && "list not existed");
     assert((next != NULL) && "list not existed");

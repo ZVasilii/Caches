@@ -46,6 +46,7 @@ LICENSE - GNU GENERAL PUBLIC LICENSE
 
 
 size_t cachesize = 0;  ///Size of cache
+size_t req_size = 0;   ///Size of requests in contest mode
 
 //Creating main memory of MEM_SIZE
 struct page_t* create_fill_mem (size_t size)
@@ -270,8 +271,9 @@ void contest_testing(unsigned long long * p,
 	long long int T_hits = 0;
 	long long int req_qt = 0;
 
-	while (fscanf(inp, "%lld", &page_n) == 1)
+	for (int i = 0 ; i < req_size; i++)
 	{
+		fscanf(inp, "%lld", &page_n);
 		fast_get_page(p, page_n, T1, T2, B1, B2, mem, cache_mem, &T_hits);
 		req_qt++;
 	}
@@ -290,6 +292,8 @@ int main()
 	///Initializing the size of the cache
 	#ifdef CONTEST 
 	fscanf(stdin , "%lu", &cachesize);
+	fscanf(stdin , "%lu", &req_size);
+
 	#endif
 
 	#ifndef CONTEST 

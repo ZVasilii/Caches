@@ -48,7 +48,7 @@ enum Mode
 
 enum Delays
 {
-	MEM_DELAY = 1,
+	MEM_DELAY = 10,
 	CACHE_DELAY = 1,
 };
 

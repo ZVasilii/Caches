@@ -12,6 +12,7 @@ double-linked list
 #include "pages.h"
 #include "dl_list.h"
 
+static int check_elem_in_list(struct list_t* l, struct cell* c);
 
 //creating dl_list without any cells
 struct list_t* make_list() {
@@ -23,6 +24,7 @@ struct list_t* make_list() {
     l->length = 0;
     l->head = NULL;
     l->end = NULL;
+    l->last_found_elem = NULL;
     return l;
 }
 
@@ -41,6 +43,7 @@ struct cell* find_list_elem(struct list_t* l, long long int name) {
     assert((l != NULL)  && "list not existed");
     c = l->head;
     c = find_cell(c, name);
+    l->last_found_elem = c;
     return c;
 }
 
@@ -59,7 +62,7 @@ struct cell* insert_to_head(struct list_t* l, struct cell* c) {
 }
 
 //replace c from cur to head of next
-//c should be from cur or list will be crush!!!
+//c should be from cur (it is checking)
 struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next, struct cell* c) {
     assert((cur != NULL) && "list not existed");
     assert((next != NULL) && "list not existed");
@@ -67,6 +70,12 @@ struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next, struct 
         return NULL;
     }
     assert((cur->head != NULL) && "no cells for replacing");
+    if((c != cur->end) && (c != cur->last_found_elem)) {
+        assert((check_elem_in_list(cur, c) == 1) && "replacing element is absent in list");
+    }
+    if(c == cur->last_found_elem) {
+        cur->last_found_elem = NULL;
+    }
     if(c == cur->head) {
         cur->head = next_cell(cur->head);
     }
@@ -77,6 +86,20 @@ struct cell* replace_lf_to_head(struct list_t* cur, struct list_t* next, struct 
     cur->length--;
     insert_to_head(next, c);
     return c;
+}
+
+static int check_elem_in_list(struct list_t* l, struct cell* c) {
+    struct cell* s;
+    assert(l != NULL);
+    assert(c != NULL);
+    s = l->head;
+    while(s != NULL) {
+        if(s == c) {
+            return 1;
+        }
+        s = next_cell(c);
+    }
+    return 0;
 }
 
 void delete_last_elem(struct list_t* l) {

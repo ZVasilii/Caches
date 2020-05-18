@@ -12,6 +12,7 @@ Header that unites all, that need for using doubly linked list
 //head - the first element of the list (no element - NULL)
 //end - the last element of the list (no element - NULL)
 //length - number of the list elements
+//last_found_elem - last result of function find_list_elem() 
 //end and length exists only for convenience and more fast working
 //
 //functions in header are separated on blocks
@@ -32,6 +33,7 @@ struct cell;
 struct list_t {
     struct cell* head;
     unsigned long long length;
+    struct cell* last_found_elem;
     struct cell* end;
 };
 

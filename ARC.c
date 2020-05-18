@@ -28,7 +28,7 @@ fast_get_page - main function of ARC, it uses ARC algorithm to cache given page
 
 
 extern size_t cachesize; //From function main_test.c
-///extern size_t req_size;  //From function main_test.c
+
 
 
 long long int imax (long long int a, long long int b)   

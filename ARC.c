@@ -18,6 +18,7 @@ fast_get_page - main function of ARC, it uses ARC algorithm to cache given page
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
+#include <stddef.h>
 
 #include "pages.h"
 #include "dl_list.h"
@@ -105,7 +106,7 @@ struct cache_t* from_mem_to_cache_mem(long long int page_name, struct page_t* me
 	my_delay(MEM_DELAY);
 	#endif
 	
-	int i = 0;
+	size_t i = 0;
 	struct page_t* page_in_mem = find_page(page_name, mem);   //try to find pointer on page in memory with this page_name
 	assert((page_in_mem!= NULL) && "No such page in memory");
 

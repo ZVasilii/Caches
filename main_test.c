@@ -30,12 +30,13 @@ A brief overview of the files included in our project:
 LICENSE - GNU GENERAL PUBLIC LICENSE
 */
 
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <stddef.h>
 
 
 #include "dl_list.h"
@@ -271,7 +272,7 @@ void contest_testing(unsigned long long * p,
 	long long int T_hits = 0;
 	long long int req_qt = 0;
 
-	for (int i = 0 ; i < req_size; i++)
+	for (size_t i = 0 ; i < req_size; i++)
 	{
 		fscanf(inp, "%lld", &page_n);
 		fast_get_page(p, page_n, T1, T2, B1, B2, mem, cache_mem, &T_hits);
